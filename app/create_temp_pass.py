@@ -9,27 +9,29 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-username = 'cs3083MRM'
+temporary = "new password goes here"
+
+username = 'cs3083MRM@yahoo.com'
 password = 'NYUcs3083'
 print "connecting"
-server = smtplib.SMTP('android.smtp.mail.yahoo.com', port=587)
+server = smtplib.SMTP('smtp.mail.yahoo.com', port=587)
 print "connected"
 server.starttls()
 print "logging in"
 server.login(username, password)
 print "logged in, sending"
 
-fromaddr = 'cs3803MRM@yahoo.com'
-toaddr = 'cs3083MRM@yahoo.com'
+fromaddr = 'cs3083MRM@yahoo.com'
+toaddr = 'mattr2496@yahoo.com'
 msg = MIMEMultipart()
 msg['From'] = fromaddr
-msg['Subject'] = "Your Secret Santa assignment has arrived!"
+msg['Subject'] = "Findfolks - Requested a Password Change"
 msg['To'] = toaddr
 body = """
-<h1> Forgot your password? Use this temporary password to log in. </h1>
-<h3> Your temporary password is: </h3>
+<h3> Forgot your password? Use this temporary password to log in. </h3>
+<h2> Your temporary password is: %s</h2>
 </body>
-"""
+""" % temporary
 msg.attach(MIMEText(body, 'html'))
 server.sendmail(fromaddr, toaddr, msg.as_string())
     
