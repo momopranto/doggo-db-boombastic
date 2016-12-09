@@ -9,4 +9,5 @@ bcrypt
 six
 itsdangerous
 requests
+mysql-python
 PyMySQL
