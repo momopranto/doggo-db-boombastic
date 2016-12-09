@@ -6,22 +6,17 @@ web = Blueprint('web', __name__)
 def home():
     return render_template('index.html')
 
-@web.route('/login')
-def login():
-    pass
+# @web.route('/login')
+# def login():
+#     pass
 
 @web.route('/logout')
 def login():
     pass
 
-@web.route('/register'):
+@web.route('/register')
 def register():
-    pass
-
-
-@web.route('/view')
-def view():
-    pass
+    return(render_template("register.html"))
 
 
 @web.route('/search')
@@ -33,7 +28,7 @@ def search():
 def create():
     pass
 
-
-@web.route('/view')
-def view():
+@web.route('/view_events')
+def view_events():
     pass
+#AssertionError: View function mapping is overwriting an existing endpoint function: web.login
