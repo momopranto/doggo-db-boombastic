@@ -23,17 +23,67 @@
 	  </div>
 	</nav>
 
-<form action="/registerAuth" method="POST">
-	<input type="text" name = "username" placeholder="username" required/> </br>
-	<input type="password" name = "password" placeholder="password" required/></br>
-	<input type="submit" value = Register />
-	{% if error %}
-		<p class="error"><strong>Error:</strong> {{error}}</p>
-	{% endif %}
+<div class="wrapper">
+	<h2> Create a new event for {{group_name}}</h2><br>
+<!-- 	<form class="form-horizontal" action="/registerAuth" method="POST">
+		<div class="form-group">
+		<label class="control-label">Title</label>
+		<div class="col-sm-10">
+		<input type="text" name="title" placeholder="title" required/> </br>
+		</div></div>
+		<label class="control-label">Start time</label>
+		<input type="text" name = "start_time" placeholder="Start time" required/>
+		<label class="control-label">End Time</label>
+		<input type="text" name="end_time" placeholder="End time" required/> </br>
+		<label class="control-label">Location</label>	
+		<input type="text" name="location" placeholder="Location" required/> </br>
+		<label class="control-label">Zipcode</label>	
+		<input type="text" name="zipcode" placeholder="Zipcode" required/> </br>	<br>	
+		<input type="submit" value="Create event" />
+		{% if error %}
+			<p class="error"><strong>Error:</strong> {{error}}</p>
+		{% endif %}
+	</form> -->
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="title">Title:</label>
+    <div class="col-sm-10">
+      <input style="width: 250px" type="text" class="form-control" id="title" placeholder="Enter a title">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="start">Start time:</label>
+    <div class="col-sm-10"> 
+      <input style="width: 250px" type="text" class="form-control" id="start" placeholder="Enter a starting time">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="end">End time:</label>
+    <div class="col-sm-10">
+      <input style="width: 250px" type="text" class="form-control" id="end" placeholder="Enter an ending time">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="location">Location:</label>
+    <div class="col-sm-10">
+      <input style="width: 250px" type="text" class="form-control" id="location" placeholder="Enter a location">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="zipcode">Zipcode:</label>
+    <div class="col-sm-10">
+      <input style="width: 250px" type="text" class="form-control" id="zipcode" placeholder="Enter a zipcode">
+    </div>
+  </div>  
+  <div class="form-group"> 
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+  </div>
 </form>
 
-<a href="/">Go back</a>
-
+</div>
 </body>
 
 
