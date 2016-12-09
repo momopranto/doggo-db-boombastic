@@ -11,7 +11,7 @@ def home():
 #     pass
 
 @web.route('/logout')
-def login():
+def logout():
     pass
 
 @web.route('/register')
@@ -28,7 +28,10 @@ def search():
 def create():
     pass
 
+<<<<<<< HEAD
 @web.route('/view_events')
 def view_events():
     pass
 #AssertionError: View function mapping is overwriting an existing endpoint function: web.login
+=======
+>>>>>>> 75167887b52794dca9b0d5e6a076b29ab9187d8f

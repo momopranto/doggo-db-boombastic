@@ -1,0 +1,6 @@
+Extra Features: (We need 6)
+- If user is logged in, let them change their password
+- If user can't log in, let them send themselves a temporary password to sign in with and change their password
+	(Matt has SMTP python script for this already)
+
+Add suggestions!!
