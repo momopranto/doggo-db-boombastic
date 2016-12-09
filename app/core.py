@@ -16,12 +16,7 @@ def logout():
 
 @web.route('/register')
 def register():
-    pass
-
-
-@web.route('/view')
-def view():
-    pass
+    return(render_template("register.html"))
 
 
 @web.route('/search')
@@ -33,3 +28,6 @@ def search():
 def create():
     pass
 
+@web.route('/view_events')
+def view_events():
+    pass
