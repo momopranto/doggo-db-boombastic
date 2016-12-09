@@ -3,7 +3,7 @@ web:
     ports:
         - "4000:4000"
     environment:
-        DB_URL=mysql://root@db/FindFolks
+        - DB_URL=mysql://root@db/FindFolks
     volumes:
         - ./:/opt/:ro
     links:

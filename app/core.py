@@ -11,10 +11,10 @@ def login():
     pass
 
 @web.route('/logout')
-def login():
+def logout():
     pass
 
-@web.route('/register'):
+@web.route('/register')
 def register():
     pass
 
@@ -33,7 +33,3 @@ def search():
 def create():
     pass
 
-
-@web.route('/view')
-def view():
-    pass
