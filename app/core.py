@@ -69,11 +69,10 @@ def register_member():
 def search():
     pass
 
-
 @web.route('/create')
 def create():
-    pass
-
-@web.route('/events')
-def view_events():
-    pass
+	pass
+	
+@web.route('/signup')
+def signup():
+	pass
