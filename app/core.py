@@ -13,7 +13,6 @@ def index():
 def home():
     return render_template('home.html')
 
-
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST' and len(request.form) == 2:
@@ -92,13 +91,10 @@ def groups():
 def create_event():
 	pass
 
-<<<<<<< HEAD
 @web.route('/create_group')
 def create_group():
 	pass
 
-=======
->>>>>>> 976ece13316c283b0fae374bbe21e5e1a4a7d6f3
 @web.route('/signup')
 def signup():
 	pass
