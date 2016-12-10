@@ -28,8 +28,8 @@ def logout():
 @web.route('/register', methods = ['GET', 'POST'])
 def register_member():
 	if request.method == 'POST':
-		firstname = request.form['firstname']
-		lastname = request.form['lastname']
+		firstname = request.form['first-name']
+		lastname = request.form['last-name']
 		zipcode = request.form['zipcode']
 		email = request.form['email']
 		username = request.form['username']
