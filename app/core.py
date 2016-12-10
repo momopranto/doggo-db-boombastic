@@ -9,9 +9,10 @@ web = Blueprint('web', __name__)
 def index():
     return render_template('index.html')
 
-@web.route('/home/')
+@web.route('/home', methods = ['GET'])
 def home():
     return render_template('home.html')
+
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -30,11 +31,12 @@ def login():
         else:
             return render_template('login.html', error='Username does not exist')
     else:
-    	return render_template('login.html')
+        return render_template('login.html')
 
 @web.route('/logout')
 def logout():
-    pass
+    session.clear()
+    return redirect(url_for("web.index"))
 
 @web.route('/register', methods = ['GET', 'POST'])
 def register():
@@ -67,12 +69,12 @@ def register():
             errors.append('Password cannot be blank')
 
 	if len(errors) > 0:
-	    return render_template('register.html', errors=errors)
+            return render_template('register.html', errors=errors)
 	else:
-	    member = Member(username, password, firstname, lastname, email, zipcode)
-	    db.session.add(member)
-	    db.session.commit()
-	    db.session.close()
+            member = Member(username, password, firstname, lastname, email, zipcode)
+            db.session.add(member)
+            db.session.commit()
+            db.session.close()
 
             return render_template('login.html', success='Account was successfully created')
     else:
@@ -82,11 +84,10 @@ def register():
 def search():
     pass
 
-
 @web.route('/create')
 def create():
-    pass
+	pass
 
-@web.route('/view_events')
-def view_events():
-    pass
+@web.route('/signup')
+def signup():
+	pass

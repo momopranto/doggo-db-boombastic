@@ -67,6 +67,16 @@ class AnEvent(db.Model):
 	zipcode = db.Column(db.Integer())
 	db.ForeignKeyConstraint(['location_name', 'zipcode'], ['location.location_name', 'location.zipcode'])
 
+	def __init__(self, event_id, title, description, start_time, end_time, location_name, zipcode):
+		self.event_id = event_id
+		self.title = title
+		self.description = description
+		self.start_time = start_time
+		self.end_time = end_time
+		self.location_name = location_name
+		self.zipcode = zipcode
+
+
 class Organize(db.Model):
 	event_id = db.Column(db.Integer(), db.ForeignKey('an_event.event_id'), primary_key=True)
 	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)
@@ -75,3 +85,10 @@ class SignUp(db.Model):
 	event_id = db.Column(db.Integer(), db.ForeignKey('an_event.event_id'), primary_key=True)
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 	rating = db.Column(db.Integer())
+
+	def __init__(self, event_id, username):
+		self.event_id = event_id
+		self.username = username
+
+	def rate(rating):
+		self.rating = rating

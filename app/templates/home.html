@@ -14,12 +14,12 @@
 	      <a class="navbar-brand">FindFolks</a>
 	    </div>
 	    <ul class="nav navbar-nav">
-	      <li class="active"><a href="home.html">Home</a></li>
-	      <li><a href="search.html">Search Events</a></li>
-	      <li><a href="allEvents.html">All Events</a></li>
-	      <li><a href="create.html">Create an Event</a></li>
-	      <li><a href="login.html">Login</a></li>
-   	      <li><a href="register.html">Register</a></li>
+	      <li class="active"><a href="/home">Home</a></li>
+	      <li><a href="/search">Search Events</a></li>
+	      <li><a href="/events">All Events</a></li>
+	      <li><a href="/create">Create an Event</a></li>
+	      <li><a href="/login">Login</a></li>
+   	      <li><a href="/register">Register</a></li>
 	    </ul>
 	  </div>
 	</nav>
@@ -39,19 +39,19 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th style="width: 70px">event ID</th>
 				<th style="width: 80px">Title</th>
+				<th style="width: 140px">Description</th>
 				<th style="width: 70px">Starting time</th>
 				<th style="width: 70px">Ending time</th>
 				<th style="width: 70px">Location</th>
 				<th style="width: 30px">Zipcode</th>
-				<th style="width: 80px">Group</th>
-				<th style="width: 140px">Description</th>
-
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
+			{%for event in events%}
+				<tr><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td></tr>
+			{% endfor %}
+			<!-- <tr>
 				<td>123456</td>
 				<td>Tennis Match</td>
 				<td>12/6 2:45pm</td>
@@ -60,8 +60,8 @@
 				<td>11224</td>
 				<td>Tennis Lovers</td>
 				<td>Doubles tennis matches in Brooklyn, all experience levels welcome</td>
-			</tr>
-			<tr>
+			</tr> -->
+			<!-- <tr>
 				<td>fg</td>
 				<td>fg</td>
 				<td>fg</td>
@@ -70,7 +70,7 @@
 				<td>fg</td>
 				<td>fg</td>
 				<td>fg</td>
-			</tr>
+			</tr> -->
 		</tbody>
 	</table>
 
