@@ -5,24 +5,35 @@ from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo
 web = Blueprint('web', __name__)
 
 @web.route('/')
+def index():
+	return render_template('index.html')
+
+@web.route('/home', methods = ['GET'])
 def home():
-    return render_template('index.html')
+    return render_template('home.html', username=session['username'])
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
 	if request.method == 'POST':
-		username = request.form['username']
-		member = Member.query.filter(username=username).first()
+		errors = []
+		user = request.form['username']
+		member = Member.query.filter_by(username=user).first()
 		if member:
-			if md5(member.password).hexdigest() == request.form['password']:
-				#create session
-				#relocate to home page
-				pass
+			if member.password == md5(request.form['password']).hexdigest():
+				session['username'] = member.username
+				return render_template(redirect(url_for('web.home')))
+			else:
+				errors.append("Password is incorrect")
+		else:
+			errors.append("Member does not exist please register")
+		if len(errors) > 0:	
+    			return render_template('login.html', errors=errors)
     	return render_template('login.html')
 
 @web.route('/logout')
 def logout():
-    pass
+    session.clear()
+    return render_template("logout.html")
 
 @web.route('/register', methods = ['GET', 'POST'])
 def register_member():
@@ -50,8 +61,8 @@ def register_member():
 			db.session.commit()
 			db.session.close()
 
-			#create session
-    		return render_template(redirect(url_for('web.register_member')))
+			session['username'] = member.username
+    		return render_template(redirect(url_for('web.home')))
     	return render_template('register.html')
 
 @web.route('/search')
@@ -63,6 +74,6 @@ def search():
 def create():
     pass
 
-@web.route('/view_events')
+@web.route('/events')
 def view_events():
     pass

@@ -2,7 +2,7 @@ import os
 
 #SERVER SETTINGS#
 DEBUG = True
-SQLALCHEMY_DATABASE_URI = 'mysql://root:fuckthepolice@localhost/FindFolks'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:ass@localhost/FindFolks'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

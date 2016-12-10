@@ -15,12 +15,12 @@
 	      <a class="navbar-brand">FindFolks</a>
 	    </div>
 	    <ul class="nav navbar-nav">
-	      <li><a href="home.html">Home</a></li>
-	      <li><a href="search.html">Search Events</a></li>
-	      <li><a href="allEvents.html">All Events</a></li>
-	      <li><a href="create.html">Create an Event</a></li>
-	      <li class="active"><a href="login.html">Login</a></li>
-   	      <li><a href="register.html">Register</a></li>
+	      <li><a href="/home">Home</a></li>
+	      <li><a href="/search">Search Events</a></li>
+	      <li><a href="/events">All Events</a></li>
+	      <li><a href="/create">Create an Event</a></li>
+	      <li class="active"><a href="/login">Login</a></li>
+   	      <li><a href="/register">Register</a></li>
 	    </ul>
 	  </div>
 	</nav>
@@ -28,7 +28,13 @@
 <div class="wrapper">
 
 <h2>Login to your account</h2><br>
-
+	{%for error in errors %}
+		<div class="alert alert-danger alert-dismissable">
+			<span class="sr-only">Error:</span>
+			{{error}}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+		</div>	
+	{% endfor %}
 	<form class="form-horizontal" action="/login" method="POST">
 	  <div class="form-group">
 	    <label class="control-label col-sm-1" for="username">Username:</label>
@@ -39,11 +45,9 @@
 	  <div class="form-group">
 	    <label class="control-label col-sm-1" for="password">Password:</label>
 	    <div class="col-sm-10"> 
-	      <input style="width: 250px" type="text" class="form-control" name="password" placeholder="Enter your password">
+	      <input style="width: 250px" type="password" class="form-control" name="password" placeholder="Enter your password">
 	    </div>
 	  </div>
-	  	<h4 style="margin-left: 59px"><a href="/lostPassword">Forgot your password?</a></h4>
-
 	  <div class="form-group"> 
 	    <div class="col-sm-offset-2 col-sm-10">
 	      <button type="submit" class="btn btn-default">Login</button>
@@ -51,7 +55,8 @@
 	  </div>
 	</form>
 
-	<h3><a href="register.html">Click here to register a new account</a></h3><br>
+	<h3><a href="/register">Click here to register a new account</a></h3><br>
+	<h4 style="margin-left: 59px"><a href="/lostpassword">Forgot your password?</a></h4>
 
 <!-- 	<form action="/loginAuth" method="POST">
 		<input type="text" name = "username" placeholder="username" required/> </br>
