@@ -18,4 +18,6 @@ body {
 	margin-left: 20px;
 }
 
-
+table, th, td{
+	border-right-style:inset;
+}
