@@ -23,6 +23,10 @@ class Friend(db.Model):
 	friend_of = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 	friend_to = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 
+	def __init__(self, friend_of, friend_to):
+		self.friend_of = friend_of
+		self.friend_to = friend_to
+
 	
 class AGroup(db.Model):
 	group_id = db.Column(db.Integer(), primary_key=True)

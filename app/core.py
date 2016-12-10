@@ -26,7 +26,7 @@ def logout():
     pass
 
 @web.route('/register', methods = ['GET', 'POST'])
-def register():
+def register_member():
 	if request.method == 'POST':
 		firstname = request.form['firstname']
 		lastname = request.form['lastname']
