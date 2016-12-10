@@ -2,9 +2,13 @@
 <head>
 </head>
 <body>
-<form action="/registerAuth" method="POST">
+<form action="/register" method="POST">
 	<input type="text" name = "username" placeholder="username" required/> </br>
 	<input type="password" name = "password" placeholder="password" required/></br>
+	<input type="text" name="firstName" placeholder="FirstName" required/> </br>
+	<input type="text" name="lastName" placeholder="LastName" required/> </br>
+	<input type="text" name="email" placeholder="email" required/> </br>
+	<input type="text" name="zipcode" placeholder="zipcode" required/> </br>
 	<input type="submit" value = Register />
 	{% if error %}
 		<p class="error"><strong>Error:</strong> {{error}}</p>

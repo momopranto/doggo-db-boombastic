@@ -22,6 +22,7 @@ class Friend(db.Model):
 	friend_of = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 	friend_to = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 
+	
 class AGroup(db.Model):
 	group_id = db.Column(db.Integer(), primary_key=True)
 	group_name = db.Column(db.String(20))

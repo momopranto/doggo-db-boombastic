@@ -1,4 +1,5 @@
 from flask import *
+from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp
 
 web = Blueprint('web', __name__)
 
@@ -6,16 +7,26 @@ web = Blueprint('web', __name__)
 def home():
     return render_template('index.html')
 
-# @web.route('/login')
-# def login():
-#     pass
+@web.route('/login')
+def login():
+    pass
 
 @web.route('/logout')
 def logout():
     pass
 
-@web.route('/register')
+@web.route('/register', methods = ['GET', 'POST'])
 def register():
+	if request.method == 'POST':
+		username = request.form['username']
+		password = request.form['password']
+		firstname = request.form['firstname']
+		lastname = request.form['lastname']
+		email = request.form['email']
+		zipcode = request.form['zipcode']
+		member = Member(username, password, firstname, lastname, email, zipcode)
+		db.session.add(member)
+		db.session.commit()
     return(render_template("register.html"))
 
 
@@ -28,10 +39,7 @@ def search():
 def create():
     pass
 
-<<<<<<< HEAD
 @web.route('/view_events')
 def view_events():
     pass
-#AssertionError: View function mapping is overwriting an existing endpoint function: web.login
-=======
->>>>>>> 75167887b52794dca9b0d5e6a076b29ab9187d8f
+
