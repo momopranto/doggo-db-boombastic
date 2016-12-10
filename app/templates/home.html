@@ -5,25 +5,26 @@
   <link href="../static/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
   <script src="../static/js/bootstrap.min.js"></script>
   <link href="../static/css/style.css" rel='stylesheet' type='text/css' />
-<title> FindFolks - Home </title>
+
+	<title> FindFolks - Home </title>
 </head>
 <body>
-	<nav class="navbar navbar-default">
-	  <div class="container-fluid">
-	    <div class="navbar-header">
-	      <a class="navbar-brand">FindFolks</a>
-	    </div>
-	    <ul class="nav navbar-nav">
-	      <li class="active"><a href="/home">Home</a></li>
-	      <li><a href="/search">Search Events</a></li>
-	      <li><a href="/events">All Events</a></li>
-	      <li><a href="/create">Create an Event</a></li>
-	      <li><a href="/login">Login</a></li>
-   	      <li><a href="/register">Register</a></li>
-	    </ul>
-	  </div>
-	</nav>
-
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand">FindFolks</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/home">Home</a></li>
+        <li><a href="/events">All Events</a></li>
+        <li><a href="/groups">Search Groups</a></li>
+        <li><a href="/create_event">Create an Event</a></li>
+        <li><a href="/create_group">Create a Group</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+      </ul>
+    </div>
+  </nav>
 <div class="wrapper">
 	<h2> Welcome to your profile, {{username}}!</h2><br>
 
@@ -51,26 +52,7 @@
 			{%for event in events%}
 				<tr><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td></tr>
 			{% endfor %}
-			<!-- <tr>
-				<td>123456</td>
-				<td>Tennis Match</td>
-				<td>12/6 2:45pm</td>
-				<td>12/6 5:00pm</td>
-				<td>Brooklyn Tennis Arena</td>
-				<td>11224</td>
-				<td>Tennis Lovers</td>
-				<td>Doubles tennis matches in Brooklyn, all experience levels welcome</td>
-			</tr> -->
-			<!-- <tr>
-				<td>fg</td>
-				<td>fg</td>
-				<td>fg</td>
-				<td>fg</td>
-				<td>fg</td>
-				<td>fg</td>
-				<td>fg</td>
-				<td>fg</td>
-			</tr> -->
+			
 		</tbody>
 	</table>
 

@@ -65,14 +65,22 @@ def register_member():
     		return render_template(redirect(url_for('web.home')))
     	return render_template('register.html')
 
-@web.route('/search')
-def search():
+@web.route('/events')
+def events():
     pass
 
-@web.route('/create')
-def create():
+@web.route('/groups')
+def groups():
+    pass
+
+@web.route('/create_event')
+def create_event():
 	pass
-	
+
+@web.route('/create_group')
+def create_group():
+	pass
+
 @web.route('/signup')
 def signup():
 	pass

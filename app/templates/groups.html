@@ -6,7 +6,7 @@
   <script src="../static/js/bootstrap.min.js"></script>
   <link href="../static/css/style.css" rel='stylesheet' type='text/css' />
 
-	<title> FindFolks - Logout </title>
+	<title> FindFolks - Groups </title>
 </head>
 <body>
   <nav class="navbar navbar-default">
@@ -16,8 +16,8 @@
       </div>
       <ul class="nav navbar-nav">
         <li><a href="/home">Home</a></li>
-        <li><a href="/events">All Events</a></li>
-        <li><a href="/groups">Search Groups</a></li>
+        <li><a href="/groups">All groups</a></li>
+        <li class="active"><a href="/groups">All Groups</a></li>
         <li><a href="/create_event">Create an Event</a></li>
         <li><a href="/create_group">Create a Group</a></li>
         <li><a href="/login">Login</a></li>
@@ -25,11 +25,22 @@
       </ul>
     </div>
   </nav>
-	<div class="wrapper">
-		<h2> Logged Out </h2>
-		<h3> You have successfully logged out. </h3>
-		<h3><a href="/login">Click here to log back in!</a></h3><br>
-	</div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width: 80px">Name</th>
+        <th style="width: 140px">Description</th>
+        <th style="width: 70px">Join</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for group in groups%}
+        <tr><td>{{group.name}}</td><td>{{group.description}}</td><td><button type="submit" class="btn btn-default">Join</button></td></tr>
+      {% endfor %}
+      <!-- searches for all group and should give user option to signup for them-->
+    </tbody>
+  </table>
 </body>
-</html>
 
+
+</html>
