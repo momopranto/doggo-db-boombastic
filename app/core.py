@@ -13,7 +13,6 @@ def index():
 def home():
     return render_template('home.html')
 
-
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST' and len(request.form) == 2:
