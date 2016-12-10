@@ -1,4 +1,5 @@
-from hashlib import md5
+import re
+from passlib.hash import bcrypt_sha256 as bcrypt
 from flask import *
 from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp
 
@@ -6,64 +7,78 @@ web = Blueprint('web', __name__)
 
 @web.route('/')
 def index():
-	return render_template('index.html')
+    return render_template('index.html')
 
 @web.route('/home', methods = ['GET'])
 def home():
-    return render_template('home.html', username=session['username'])
+    return render_template('home.html')
+
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
-	if request.method == 'POST':
-		errors = []
-		user = request.form['username']
-		member = Member.query.filter_by(username=user).first()
-		if member:
-			if member.password == md5(request.form['password']).hexdigest():
-				session['username'] = member.username
-				return render_template(redirect(url_for('web.home')))
-			else:
-				errors.append("Password is incorrect")
-		else:
-			errors.append("Member does not exist please register")
-		if len(errors) > 0:	
-    			return render_template('login.html', errors=errors)
-    	return render_template('login.html')
+    if request.method == 'POST' and len(request.form) == 2:
+	username = request.form['username']
+	member = Member.query.filter_by(username=username).first()
+	if member:
+            if bcrypt.verify(request.form['password'], member.password):
+		session['username'] = member.username
+                session['firstname'] = member.firstname
+                session['lastname'] = member.lastname
+
+                return redirect(url_for('web.home'))
+            else:
+                return render_template('login.html', error='Username or password is incorrect')
+        else:
+            return render_template('login.html', error='Username does not exist')
+    else:
+        return render_template('login.html')
 
 @web.route('/logout')
 def logout():
     session.clear()
-    return render_template("logout.html")
+    return redirect(url_for("web.index"))
 
 @web.route('/register', methods = ['GET', 'POST'])
-def register_member():
-	if request.method == 'POST':
-		errors = []
-		firstname = request.form['first-name']
-		lastname = request.form['last-name']
-		zipcode = int(request.form['zipcode'])
-		email = request.form['email']
-		username = request.form['username']
-		password = md5(request.form['password']).hexdigest()
-		
-		username_check = Member.query.filter_by(username=username).first()
-		email_check = Member.query.filter_by(email=email).first()
-		if username_check:
-			errors.append("That username is already taken")
-		if email_check:
-			errors.append("That email is already registered")
-		if len(errors) > 0:
-			return render_template('register.html', errors=errors)
+def register():
+    if request.method == 'POST' and len(request.form) == 6:
+        errors = []
+        firstname = request.form['first-name']
+        lastname = request.form['last-name']
 
-		else:
-			member = Member(username, password, firstname, lastname, email, zipcode)
-			db.session.add(member)
-			db.session.commit()
-			db.session.close()
+        if Member.query.filter_by(username=request.form['username']).first():
+            errors.append('This username has already been taken')
+        else:
+            username = request.form['username']
 
-			session['username'] = member.username
-    		return render_template(redirect(url_for('web.home')))
-    	return render_template('register.html')
+        if isinstance(int(request.form['zipcode']), int) and len(request.form['zipcode']) == 5:
+            zipcode = int(request.form['zipcode'])
+        else:
+            errors.append('Invalid zipcode')
+
+        if re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", request.form['email']):
+            if Member.query.filter_by(email=request.form['email']).first():
+                errors.append('This email has already been used')
+            else:
+                email = request.form['email']
+        else:
+            errors.append('Invalid email')
+
+        if len(request.form['password']) > 0:
+            password = bcrypt.hash(request.form['password'])
+        else:
+            errors.append('Password cannot be blank')
+
+	if len(errors) > 0:
+            return render_template('register.html', errors=errors)
+	else:
+            member = Member(username, password, firstname, lastname, email, zipcode)
+            db.session.add(member)
+            db.session.commit()
+            db.session.close()
+
+            return render_template('login.html', success='Account was successfully created')
+    else:
+        return render_template('register.html')
 
 @web.route('/events')
 def events():
@@ -77,10 +92,13 @@ def groups():
 def create_event():
 	pass
 
+<<<<<<< HEAD
 @web.route('/create_group')
 def create_group():
 	pass
 
+=======
+>>>>>>> 976ece13316c283b0fae374bbe21e5e1a4a7d6f3
 @web.route('/signup')
 def signup():
 	pass

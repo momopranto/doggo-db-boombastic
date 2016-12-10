@@ -5,7 +5,7 @@ db = SQLAlchemy()
 
 class Member(db.Model):
 	username = db.Column(db.String(20), primary_key=True)
-	password = db.Column(db.String(32))
+	password = db.Column(db.String(128))
 	firstname = db.Column(db.String(20))
 	lastname = db.Column(db.String(20))
 	email = db.Column(db.String(32), unique = True)
@@ -27,7 +27,7 @@ class Friend(db.Model):
 		self.friend_of = friend_of
 		self.friend_to = friend_to
 
-	
+
 class AGroup(db.Model):
 	group_id = db.Column(db.Integer(), primary_key=True)
 	group_name = db.Column(db.String(20))

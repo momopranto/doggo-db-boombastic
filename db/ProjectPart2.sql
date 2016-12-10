@@ -18,7 +18,7 @@
 
 CREATE TABLE `member` (
   `username` varchar(20) NOT NULL DEFAULT '',
-  `password` varchar(32) NOT NULL DEFAULT '',
+  `password` varchar(128) NOT NULL DEFAULT '',
   `firstname` varchar(20) NOT NULL DEFAULT '',
   `lastname` varchar(20) NOT NULL DEFAULT '',
   `email` varchar(32) NOT NULL DEFAULT '',
