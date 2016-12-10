@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script src="../static/js/jquery-3.1.1.min.js"></script>
   <link href="../static/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
-  <script src="../static/Javascript/bootstrap.min.js"></script>
+  <script src="../static/js/bootstrap.min.js"></script>
   <link href="../static/css/style.css" rel='stylesheet' type='text/css' />
 <title> FindFolks - Register </title>
 </head>
@@ -25,7 +26,13 @@
 
 <div class="wrapper">
 	<h2>Register for a new account</h2><br>
-
+	{%for error in errors %}
+		<div class="alert alert-danger alert-dismissable">
+			<span class="sr-only">Error:</span>
+			{{error}}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+		</div>	
+	{% endfor %}
 	<form class="form-horizontal" action="/register" method="POST">
 	  <div class="form-group">
 	    <label class="control-label col-sm-1" for="first-name">First name:</label>

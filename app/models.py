@@ -8,7 +8,7 @@ class Member(db.Model):
 	password = db.Column(db.String(32))
 	firstname = db.Column(db.String(20))
 	lastname = db.Column(db.String(20))
-	email = db.Column(db.String(32))
+	email = db.Column(db.String(32), unique = True)
 	zipcode = db.Column(db.Integer())
 
 	def __init__(self, username, password, firstname, lastname, email, zipcode):
