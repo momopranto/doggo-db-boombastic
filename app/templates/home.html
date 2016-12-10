@@ -10,7 +10,7 @@
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
-	      <a class="navbar-brand" href="#">FindFolks</a>
+	      <a class="navbar-brand">FindFolks</a>
 	    </div>
 	    <ul class="nav navbar-nav">
 	      <li class="active"><a href="home.html">Home</a></li>
@@ -23,6 +23,11 @@
 	  </div>
 	</nav>
 
+<div class="wrapper">
+<h2> Welcome to your profile, {{username}}!</h2><br>
+
+
+
 	<form action="/post" method="POST">
 		<h1>Welcome {{username}}</h1> 
 		<input type="text" name = "blog" placeholder="post" required/> </br>
@@ -34,6 +39,33 @@
 			border: 1px solid black;
 		}
 	</style>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th style="width: 90px">event ID</th>
+				<th style="width: 120px">Title</th>
+				<th style="width: 90px">Starting time</th>
+				<th style="width: 90px">Ending time</th>
+				<th style="width: 150px">Location</th>
+				<th style="width: 50px">Zipcode</th>
+				<th style="width: 100px">Group</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>fg</td>
+				<td>fg</td>
+				<td>fg</td>
+				<td>fg</td>
+				<td>fg</td>
+				<td>fg</td>
+				<td>fg</td>
+			</tr>
+		</tbody>
+	</table>
+
+
 
 	<table>
 		<th>Time</th>
@@ -48,6 +80,8 @@
 	</table>
 
 	<a href="/logout">Logout</a>
+
+	</div>
 
 </body>
 

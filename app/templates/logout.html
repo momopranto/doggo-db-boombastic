@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,11 +8,10 @@
 </head>
 
 <body>
-{% if not message %}
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
-	      <a class="navbar-brand" href="#">FindFolks</a>
+	      <a class="navbar-brand">FindFolks</a>
 	    </div>
 	    <ul class="nav navbar-nav">
 	      <li><a href="home.html">Home</a></li>
@@ -26,34 +24,11 @@
 	  </div>
 	</nav>
 
-	<h2> Logged Out </h2>
-	<p> You have successfully logged out. </p>
-	<p>Click <a href="login.html">here</a> to log back in!</p><br>
-	<a href="/register">Register</a>
-{% endif %}
-
-{% if message %}
-	<a href="/logout">Logout</a>
-	<a href="/remove_account">Remove Account</a>
-	<a href="/tweets">View your tweets</a> </br>
-	<a href="/find_people">Find people to follow</a> </br>
-	<a href="/unfollow">Unfollow someone</a> </br>
-	<a href="/view_followed">View people you have followed</a> </br>
-	</br>
-
-        <h4>15 most recent tweets from you and your followers </h4> </br>
-
-	{% for line in tweets%}
-	        <p>{{line}}</p>
-	        <hr>
-	{% endfor %}
-	{% endif %}
+	<div class="wrapper">
+		<h2> Logged Out </h2>
+		<h3> You have successfully logged out. </h3>
+		<h3><a href="login.html">Click here to log back in!</a></h3><br>
+	</div>
 </body>
-
 </html>
-=======
-{% extends "base.html" %}
-{% block content %}
-<h1>HELLO WORLD</h1>
-{% endblock %}
->>>>>>> Stashed changes
+
