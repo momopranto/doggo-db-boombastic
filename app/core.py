@@ -4,6 +4,7 @@ from passlib.hash import bcrypt_sha256 as bcrypt
 from flask import *
 from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp, About
 from sqlalchemy import and_
+from utils import populate_groups
 
 web = Blueprint('web', __name__)
 
@@ -46,6 +47,7 @@ def login():
 		session['username'] = member.username
                 session['firstname'] = member.firstname
                 session['lastname'] = member.lastname
+                session['groups'] = populate_groups(session['username'])
 
                 return redirect(url_for('web.home'))
             else:
@@ -196,8 +198,9 @@ def create_event():
 @web.route('/create_group')
 def create_group():
     if session['authed']:
-    	if request.method == "POST" and len(request.form) == 4:
+        if request.method == "POST" and len(request.form) == 4:
             errors = []
+<<<<<<< HEAD
             if request.form['name'] > 0:
                 name = request.form['name']
             else:
@@ -225,6 +228,32 @@ def create_group():
     	db.session.commit()
     	db.session.close()
         return render_template('create_group.html')
+=======
+            if request.form['name'] == 0:
+                errors.append('Group Name too short')
+            else:
+                name = request.form['name']
+                if request.form['description'] == 0:
+                    errors.append('Please Provide a description')
+                else:
+                    description = request.form['description']
+                if request.form['category'] == 0:
+                    errors.append('Please Write a Category')
+                else:
+                    category = request.form['category']
+                if request.form['keyword'] == 0 or ' ' in request.form['keyword']:
+                    errors.append("Please provide a keyword, No spaces")
+                else:
+                    keyword = request.keyword['keyword']
+                if len(errors) > 0:
+                    return render_template('create_group.html', errors=errors)
+                group = AGroup(session['username'], name, description, category, keyword)
+                db.session.add(group)
+                db.session.commit()
+                db.session.close()
+                session['groups'] = populate_groups(session['username'])
+            return render_template('create_group.html')
+>>>>>>> cbdc6ea948a31af0b9d4100219bf21c125fbed57
     else:
         redirect(url_for('web.login'))
     try:
@@ -244,6 +273,7 @@ def create_group():
 	db.session.close()
         return render_template('create_group.html')
 
+<<<<<<< HEAD
 @web.route('/signup/<event_id>')
 def signup(event_id):
 	signup_check = SignUp.query.filter_by(event_id=event_id, username=session['username'])
@@ -265,6 +295,15 @@ def join(group_id):
         db.session.close()
         return redirect(url_for('web.groups'), success = "Successfully Joined Group")
     return redirect(url_for('web.groups'), error = "Already Joined Group")
+=======
+@web.route('/signup', methods = ['POST'])
+def signup():
+    return redirect(url_for('web.events'))
+
+@web.route('/join', methods = ['POST'])
+def join():
+	return redirect(url_for('web.groups'))
+>>>>>>> cbdc6ea948a31af0b9d4100219bf21c125fbed57
 
 @web.route('/rate', methods = ['GET'])
 def rate():
