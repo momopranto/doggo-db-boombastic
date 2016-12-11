@@ -34,9 +34,18 @@ class AGroup(db.Model):
 	description = db.Column(db.Text())
 	creator = db.Column(db.String(20), db.ForeignKey('member.username'))
 
+	def __init__(self, group_name, description, creator):
+		self.group_name = group_name
+		self.description = description
+		self.creator = creator
+
 class Interest(db.Model):
 	category = db.Column(db.String(20), primary_key=True)
 	keyword = db.Column(db.String(20), primary_key=True)
+
+	def __init__(self, category, keyword):
+		self.category = category
+		self.keyword = keyword
 
 class InterestedIn(db.Model):
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
@@ -44,10 +53,22 @@ class InterestedIn(db.Model):
 	keyword = db.Column(db.String(20), primary_key=True)
 	db.ForeignKeyConstraint(['category', 'keyword'], ['interest.category', 'interest.keyword'])
 
+	def __init__(self, username, category, keyword):
+		self.username = username
+		self.category = category
+		self.keyword = keyword
+		interest = Interest(category, keyword)
+		db.session.add(interest)
+		db.session.commit()
+		db.session.close()
+
 class BelongsTo(db.Model):
 	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
-	authorized = db.Column(db.Boolean())
+	authorized = db.Column(db.Boolean(), default=1)
+
+	def __init__(self, username):
+		self.username = username
 
 class Location(db.Model):
 	location_name = db.Column(db.String(20), primary_key=True)
@@ -80,6 +101,10 @@ class AnEvent(db.Model):
 class Organize(db.Model):
 	event_id = db.Column(db.Integer(), db.ForeignKey('an_event.event_id'), primary_key=True)
 	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)
+
+	def __init__(self, event_id, group_id):
+		self.event_id = event_id
+		self.group_id = group_id
 
 class SignUp(db.Model):
 	event_id = db.Column(db.Integer(), db.ForeignKey('an_event.event_id'), primary_key=True)
