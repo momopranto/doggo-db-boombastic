@@ -1,41 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <script src="../static/js/jquery-3.1.1.min.js"></script>
-  <link href="../static/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
-  <script src="../static/js/bootstrap.min.js"></script>
-  <link href="../static/css/style.css" rel='stylesheet' type='text/css' />
+{% extends "base.html" %}
 
-	<title> FindFolks - Home </title>
-</head>
-<body>
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand">FindFolks</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/home">Home</a></li>
-        <li><a href="/events">All Events</a></li>
-        <li><a href="/groups">Search Groups</a></li>
-        <li><a href="/create_event">Create an Event</a></li>
-        <li><a href="/create_group">Create a Group</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
-      </ul>
-    </div>
-  </nav>
+{% block content %}
 <div class="wrapper">
 	<h2> Welcome to your profile, {{ session.username }}!</h2><br>
-
-
-
-<!-- 	<form action="/post" method="POST">
-		<h1>Welcome {{username}}</h1> 
-		<input type="text" name = "blog" placeholder="post" required/> </br>
-		<input type="submit" value = Post />
-	</form> -->
-
 	<h3> Your upcoming events for the next three days</h3>
 	<table class="table">
 		<thead>
@@ -55,10 +22,5 @@
 			
 		</tbody>
 	</table>
-
 </div>
-
-</body>
-
-
-</html>
+{% endblock %}
