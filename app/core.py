@@ -89,12 +89,25 @@ def groups():
 
 @web.route('/create_event')
 def create_event():
-	pass
+    pass
 
 @web.route('/create_group')
 def create_group():
-	pass
+    pass
 
 @web.route('/signup')
 def signup():
-	pass
+    pass
+
+@web.route('/rate', methods = ['GET'])
+def rate():
+    if request.args.get('eid') and request.args.get('rating'):
+        eid = request.args.get('eid')
+        rating = request.args.get('rating')
+        e = SignUp.query.filter_by(event_id=eid).first()
+        if e:
+            e.rate(rating)
+            db.session.commit()
+            db.session.close()
+            return 'Success'
+    return 'Error'
