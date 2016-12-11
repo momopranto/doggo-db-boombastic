@@ -4,6 +4,7 @@ from passlib.hash import bcrypt_sha256 as bcrypt
 from flask import *
 from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp, About
 from sqlalchemy import and_
+from utils import populate_groups
 
 web = Blueprint('web', __name__)
 
@@ -17,15 +18,6 @@ def index():
 
 @web.route('/home', methods = ['GET'])
 def home():
-<<<<<<< HEAD
-    if session['auth']:
-	   current_time = datetime.utcnow()
-	   within_time = current_time + timedelta(3) # current time + 3 days
-       events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
-       return render_template('home.html', events=events)
-    else:
-        return redirect(url_for('web.login'))
-=======
     try:
         if session['auth']:
             current_time = datetime.utcnow()
@@ -36,7 +28,6 @@ def home():
     except:
         pass
     return redirect(url_for('web.login'))
->>>>>>> 38503efa4d7f4a0e489f2d145ddfd2180a40cec1
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -56,6 +47,7 @@ def login():
 		session['username'] = member.username
                 session['firstname'] = member.firstname
                 session['lastname'] = member.lastname
+                session['groups'] = populate_groups(session['username'])
 
                 return redirect(url_for('web.home'))
             else:
@@ -206,30 +198,31 @@ def create_event():
 @web.route('/create_group')
 def create_group():
     if session['authed']:
-    	if request.method == "POST" and len(request.form) == 4:
+        if request.method == "POST" and len(request.form) == 4:
             errors = []
             if request.form['name'] == 0:
-    			errors.append('Group Name too short')
+                errors.append('Group Name too short')
             else:
                 name = request.form['name']
-    		if request.form['description'] == 0:
-    			errors.append('Please Provide a description')
-            else:
-            	description = request.form['description']
-    		if request.form['category'] == 0:
-    			errors.append('Please Write a Category')
-    		else:
-    			category = request.form['category']
-    		if request.form['keyword'] == 0 or ' ' in request.form['keyword']:
-    			errors.append("Please provide a keyword, No spaces")
-    		else:
-    			keyword = request.keyword['keyword']
-    		if len(errors) > 0:
-    			return render_template('create_group.html', errors=errors)
-    		group = AGroup(session['username'], name, description, category, keyword)
-    		db.session.add(group)
-    		db.session.commit()
-    		db.session.close()
+                if request.form['description'] == 0:
+                    errors.append('Please Provide a description')
+                else:
+                    description = request.form['description']
+                if request.form['category'] == 0:
+                    errors.append('Please Write a Category')
+                else:
+                    category = request.form['category']
+                if request.form['keyword'] == 0 or ' ' in request.form['keyword']:
+                    errors.append("Please provide a keyword, No spaces")
+                else:
+                    keyword = request.keyword['keyword']
+                if len(errors) > 0:
+                    return render_template('create_group.html', errors=errors)
+                group = AGroup(session['username'], name, description, category, keyword)
+                db.session.add(group)
+                db.session.commit()
+                db.session.close()
+                session['groups'] = populate_groups(session['username'])
             return render_template('create_group.html')
     else:
         redirect(url_for('web.login'))
@@ -252,7 +245,6 @@ def create_group():
 
 @web.route('/signup', methods = ['POST'])
 def signup():
-	
     return redirect(url_for('web.events'))
 
 @web.route('/join', methods = ['POST'])
