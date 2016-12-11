@@ -138,9 +138,6 @@ def create_event():
                         errors.append('Invalid zipcode')
                 else:
                     errors.append('Invalid zipcode')
-
-                if AnEvent.query.filter_by(
-
         except:
             return redirect(url_for('web.login'))
 
