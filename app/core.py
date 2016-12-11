@@ -197,64 +197,35 @@ def create_event():
 
 @web.route('/create_group')
 def create_group():
-    if session['authed']:
+    try:
+    if session['auth']:
         if request.method == "POST" and len(request.form) == 4:
             errors = []
-<<<<<<< HEAD
-            if request.form['name'] > 0:
-                name = request.form['name']
-            else:
-                errors.append('Group Name too short')
-    		
-            if request.form['description'] > 0:
-            	   description = request.form['description']
-            else:
-                errors.append('Please Provide a description')
-    		
-            if request.form['category'] > 0:
-    			category = request.form['category']
-            else:
-                errors.append('Please Write a Category')
-    		
-            if request.form['keyword'] > 0:
-    			keyword = request.keyword['keyword']
-            else:
-                errors.append("Please provide a keyword, No spaces")
-    		
-            if len(errors) > 0:
-    			return render_template('create_group.html', errors=errors)
-    	group = AGroup(session['username'], name, description, category, keyword)
-    	db.session.add(group)
-    	db.session.commit()
-    	db.session.close()
-        return render_template('create_group.html')
-=======
             if request.form['name'] == 0:
                 errors.append('Group Name too short')
             else:
-                name = request.form['name']
-                if request.form['description'] == 0:
-                    errors.append('Please Provide a description')
-                else:
-                    description = request.form['description']
-                if request.form['category'] == 0:
-                    errors.append('Please Write a Category')
-                else:
-                    category = request.form['category']
-                if request.form['keyword'] == 0 or ' ' in request.form['keyword']:
-                    errors.append("Please provide a keyword, No spaces")
-                else:
-                    keyword = request.keyword['keyword']
-                if len(errors) > 0:
-                    return render_template('create_group.html', errors=errors)
-                group = AGroup(session['username'], name, description, category, keyword)
-                db.session.add(group)
-                db.session.commit()
-                db.session.close()
-                session['groups'] = populate_groups(session['username'])
+            name = request.form['name']
+            if request.form['description'] == 0:
+                errors.append('Please Provide a description')
+            else:
+                description = request.form['description']
+            if request.form['category'] == 0:
+                errors.append('Please Write a Category')
+            else:
+                category = request.form['category']
+            if request.form['keyword'] == 0 or ' ' in request.form['keyword']:
+                errors.append("Please provide a keyword, No spaces")
+            else:
+                keyword = request.keyword['keyword']
+            if len(errors) > 0:
+                return render_template('create_group.html', errors=errors)
+            group = AGroup(session['username'], name, description, category, keyword)
+            db.session.add(group)
+            db.session.commit()
+            db.session.close()
+            session['groups'] = populate_groups(session['username'])
             return render_template('create_group.html')
->>>>>>> cbdc6ea948a31af0b9d4100219bf21c125fbed57
-    else:
+    except:
         redirect(url_for('web.login'))
     try:
         if session['auth']:
