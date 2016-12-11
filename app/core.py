@@ -35,7 +35,7 @@ def login():
 @web.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for("web.index"))
+    return redirect(url_for("web.login"))
 
 @web.route('/register', methods = ['GET', 'POST'])
 def register():
