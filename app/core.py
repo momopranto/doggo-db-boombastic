@@ -81,19 +81,19 @@ def register():
 
 @web.route('/events')
 def events():
-    pass
+    return render_template('events.html')
 
 @web.route('/groups')
 def groups():
-    pass
+    return render_template('groups.html')
 
 @web.route('/create_event')
 def create_event():
-    pass
+    return render_template('create_event.html')
 
 @web.route('/create_group')
 def create_group():
-    pass
+    return render_template('create_group.html')
 
 @web.route('/signup')
 def signup():
