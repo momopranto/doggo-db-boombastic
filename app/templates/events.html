@@ -4,6 +4,7 @@
   <table class="table">
     <thead>
       <tr>
+        <th style="width: 80px">Event ID</th>
         <th style="width: 80px">Title</th>
         <th style="width: 140px">Description</th>
         <th style="width: 70px">Starting time</th>
@@ -14,9 +15,15 @@
       </tr>
     </thead>
     <tbody>
+      
       {%for event in events%}
-        <tr><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td><td><button type="submit" class="btn btn-default">Sign Up</button></td></tr>
+        {%if not check_signup%}
+          <tr><td>{{event.event_id}}</td><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td><td><button type="submit" class="btn btn-default" action="/signup" method="POST">Sign Up</button></td></tr>
+        {% else %}
+          <tr><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td><td>Rating:</td></tr>
+        {% endif %}
       {% endfor %}
+      
       <!-- searches for all event and should give user option to signup for them-->
     </tbody>
   </table>

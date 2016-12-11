@@ -34,7 +34,7 @@ class AGroup(db.Model):
 	description = db.Column(db.Text())
 	creator = db.Column(db.String(20), db.ForeignKey('member.username'))
 
-	def __init__(self, group_name, description, creator, category, interest):
+	def __init__(self, creator, group_name, description, category, interest):
 		self.group_name = group_name
 		self.description = description
 		self.creator = creator
@@ -95,6 +95,10 @@ class Location(db.Model):
 	latitude = db.Column(db.Float())
 	longitude = db.Column(db.Float())
 
+	def __init__(self, location_name, zipcode):
+		self.location_name = location_name
+		self.zipcode = zipcode
+
 class AnEvent(db.Model):
 	event_id = db.Column(db.Integer(), primary_key=True)
 	title = db.Column(db.String(100))
@@ -105,8 +109,11 @@ class AnEvent(db.Model):
 	zipcode = db.Column(db.Integer())
 	db.ForeignKeyConstraint(['location_name', 'zipcode'], ['location.location_name', 'location.zipcode'])
 
-	def __init__(self, event_id, title, description, start_time, end_time, location_name, zipcode):
-		self.event_id = event_id
+	def __init__(self, title, description, start_time, end_time, location_name, zipcode):
+		location = Location(location_name, zipcode)
+		db.session.add(location)
+		db.session.commit()
+		db.session.close()
 		self.title = title
 		self.description = description
 		self.start_time = start_time

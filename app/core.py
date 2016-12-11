@@ -2,7 +2,7 @@ import re
 from datetime import datetime, timedelta
 from passlib.hash import bcrypt_sha256 as bcrypt
 from flask import *
-from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp
+from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp, About
 from sqlalchemy import and_
 
 web = Blueprint('web', __name__)
@@ -16,7 +16,11 @@ def index():
 
 @web.route('/home', methods = ['GET'])
 def home():
-    return render_template('home.html')
+	current_time = datetime.utcnow()
+	within_time = current_time + timedelta(3) # current time + 3 days
+    	events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
+    	return render_template('index.html', events=events)
+	
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -86,23 +90,42 @@ def register():
 
 @web.route('/events')
 def events():
-    return render_template('events.html')
+	events = AnEvent.query.all()
+    	return render_template('events.html', events=events)
 
 @web.route('/groups')
 def groups():
-    return render_template('groups.html')
+	groups = AGroup.query.join(About, AGroup.group_id == About.group_id).all()
+    	return render_template('groups.html', groups=groups)
 
-@web.route('/create_event')
+@web.route('/create_event', methods = ['GET', 'POST'])
 def create_event():
-    return render_template('create_event.html')
+	if request.method == "POST" and len(request.form == 5):
+		errors = []
+		# title = request.form['title']
+		# if isinstance(int(request.form['zipcode']), int) and len(request.form['zipcode']) == 5:
+  #           zipcode = int(request.form['zipcode'])
+  #       else:
+  #           errors.append('Invalid zipcode')
+    	return render_template('create_event.html')
 
 @web.route('/create_group')
 def create_group():
-    return render_template('create_group.html')
+	if request.method == "POST" and len(request.form) == 4:
+		name = request.form['name']
+		description = request.form['description']
+		category = request.form['category']
+		keyword = request.keyword['keyword']
+		group = AGroup(session['username'], name, description, category, keyword)
+		db.session.add(group)
+		db.session.commit()
+		db.session.close()
+    	return render_template('create_group.html')
 
-@web.route('/signup')
+@web.route('/signup', methods = ['POST'])
 def signup():
-    pass
+
+    return redirect(url_for("web.events"))
 
 @web.route('/rate', methods = ['GET'])
 def rate():

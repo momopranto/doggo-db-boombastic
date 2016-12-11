@@ -7,7 +7,7 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = urandom(24)
 
-    from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp
+    from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp, About
     import config
 
     app.config.from_object(config)
