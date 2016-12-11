@@ -16,10 +16,13 @@ def index():
 
 @web.route('/home', methods = ['GET'])
 def home():
-	current_time = datetime.utcnow()
-	within_time = current_time + timedelta(3) # current time + 3 days
-        events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
-        return render_template('index.html', events=events)
+    if session['auth']:
+	   current_time = datetime.utcnow()
+	   within_time = current_time + timedelta(3) # current time + 3 days
+       events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
+       return render_template('home.html', events=events)
+    else:
+        return redirect(url_for('web.login'))
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -153,16 +156,34 @@ def create_event():
 
 @web.route('/create_group')
 def create_group():
-	if request.method == "POST" and len(request.form) == 4:
-		name = request.form['name']
-		description = request.form['description']
-		category = request.form['category']
-		keyword = request.keyword['keyword']
-		group = AGroup(session['username'], name, description, category, keyword)
-		db.session.add(group)
-		db.session.commit()
-		db.session.close()
-        return render_template('create_group.html')
+    if session['authed']:
+    	if request.method == "POST" and len(request.form) == 4:
+            errors = []
+            if request.form['name'] == 0:
+    			errors.append('Group Name too short')
+            else:
+                name = request.form['name']
+    		if request.form['description'] == 0:
+    			errors.append('Please Provide a description')
+            else:
+            	description = request.form['description']
+    		if request.form['category'] == 0:
+    			errors.append('Please Write a Category')
+    		else:
+    			category = request.form['category']
+    		if request.form['keyword'] == 0 or ' ' in request.form['keyword']:
+    			errors.append("Please provide a keyword, No spaces")
+    		else:
+    			keyword = request.keyword['keyword']
+    		if len(errors) > 0:
+    			return render_template('create_group.html', errors=errors)
+    		group = AGroup(session['username'], name, description, category, keyword)
+    		db.session.add(group)
+    		db.session.commit()
+    		db.session.close()
+            return render_template('create_group.html')
+    else:
+        redirect(url_for('web.login'))
 
 @web.route('/signup', methods = ['POST'])
 def signup():
