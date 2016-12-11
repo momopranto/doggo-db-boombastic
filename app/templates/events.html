@@ -1,6 +1,20 @@
 {% extends "base.html" %}
 
 {% block content%}
+  {%if success is defined %}
+    <div class="alert alert-success alert-dismissable">
+      <span class="sr-only">Success:</span>
+      {{ success }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>  
+  {% endif %}
+  {%if error is defined %}
+    <div class="alert alert-danger alert-dismissable">
+      <span class="sr-only">Error:</span>
+      {{ error }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>  
+  {% endif %}
   <table class="table">
     <thead>
       <tr>
@@ -18,7 +32,7 @@
       
       {%for event in events%}
         {%if not check_signup%}
-          <tr><td>{{event.event_id}}</td><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td><td><button type="submit" class="btn btn-default" action="/signup" method="POST">Sign Up</button></td></tr>
+          <tr><td>{{event.event_id}}</td><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td><td><button type="submit" class="btn btn-default" action="/signup/{{event.event_id}}">Sign Up</button></td></tr>
         {% else %}
           <tr><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td><td>Rating:</td></tr>
         {% endif %}

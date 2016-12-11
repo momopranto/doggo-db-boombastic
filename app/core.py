@@ -17,26 +17,16 @@ def index():
 
 @web.route('/home', methods = ['GET'])
 def home():
-<<<<<<< HEAD
-    if session['auth']:
-	   current_time = datetime.utcnow()
-	   within_time = current_time + timedelta(3) # current time + 3 days
-       events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
-       return render_template('home.html', events=events)
-    else:
-        return redirect(url_for('web.login'))
-=======
     try:
         if session['auth']:
             current_time = datetime.utcnow()
             within_time = current_time + timedelta(3) # current time + 3 days
             events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
             db.session.close()
-            return render_template('index.html', events=events)
+            return render_template('home', events=events)
     except:
         pass
     return redirect(url_for('web.login'))
->>>>>>> 38503efa4d7f4a0e489f2d145ddfd2180a40cec1
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -208,29 +198,33 @@ def create_group():
     if session['authed']:
     	if request.method == "POST" and len(request.form) == 4:
             errors = []
-            if request.form['name'] == 0:
-    			errors.append('Group Name too short')
-            else:
+            if request.form['name'] > 0:
                 name = request.form['name']
-    		if request.form['description'] == 0:
-    			errors.append('Please Provide a description')
             else:
-            	description = request.form['description']
-    		if request.form['category'] == 0:
-    			errors.append('Please Write a Category')
-    		else:
+                errors.append('Group Name too short')
+    		
+            if request.form['description'] > 0:
+            	   description = request.form['description']
+            else:
+                errors.append('Please Provide a description')
+    		
+            if request.form['category'] > 0:
     			category = request.form['category']
-    		if request.form['keyword'] == 0 or ' ' in request.form['keyword']:
-    			errors.append("Please provide a keyword, No spaces")
-    		else:
+            else:
+                errors.append('Please Write a Category')
+    		
+            if request.form['keyword'] > 0:
     			keyword = request.keyword['keyword']
-    		if len(errors) > 0:
+            else:
+                errors.append("Please provide a keyword, No spaces")
+    		
+            if len(errors) > 0:
     			return render_template('create_group.html', errors=errors)
-    		group = AGroup(session['username'], name, description, category, keyword)
-    		db.session.add(group)
-    		db.session.commit()
-    		db.session.close()
-            return render_template('create_group.html')
+    	group = AGroup(session['username'], name, description, category, keyword)
+    	db.session.add(group)
+    	db.session.commit()
+    	db.session.close()
+        return render_template('create_group.html')
     else:
         redirect(url_for('web.login'))
     try:
@@ -250,14 +244,27 @@ def create_group():
 	db.session.close()
         return render_template('create_group.html')
 
-@web.route('/signup', methods = ['POST'])
-def signup():
-	
-    return redirect(url_for('web.events'))
+@web.route('/signup/<event_id>')
+def signup(event_id):
+	signup_check = SignUp.query.filter_by(event_id=event_id, username=session['username'])
+        if not signup_check:
+            signup = SignUp(event_id, session['username'])
+            db.session.add(signup)
+            db.session.commit()
+            db.session.close()
+            return redirect(url_for('web.events'), success = "Successfully Signed Up for Event")
+        return redirect(url_for('web.events'), error = "Already Signed Up for Event")
 
-@web.route('/join', methods = ['POST'])
-def join():
-	return redirect(url_for('web.groups'))
+@web.route('/join/<group_id>')
+def join(group_id):
+    joined_check = BelongsTo.query.filter_by(group_id=group_id, username=session['username'])
+    if not joined_check:
+        join = BelongsTo(group_id, session['username'], False)
+    	db.session.add(join)
+        db.session.commit()
+        db.session.close()
+        return redirect(url_for('web.groups'), success = "Successfully Joined Group")
+    return redirect(url_for('web.groups'), error = "Already Joined Group")
 
 @web.route('/rate', methods = ['GET'])
 def rate():

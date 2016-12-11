@@ -86,7 +86,7 @@ class InterestedIn(db.Model):
 class BelongsTo(db.Model):
 	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
-	authorized = db.Column(db.Boolean(), default=1)
+	authorized = db.Column(db.Boolean(), default=True)
 
 	def __init__(self, username, group_id, authorized):
 		self.username = username
