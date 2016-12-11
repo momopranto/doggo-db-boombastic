@@ -1,13 +1,18 @@
 import re
+from datetime import datetime, timedelta
 from passlib.hash import bcrypt_sha256 as bcrypt
 from flask import *
 from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp
+from sqlalchemy import and_
 
 web = Blueprint('web', __name__)
 
 @web.route('/')
 def index():
-    return render_template('index.html')
+	current_time = datetime.utcnow()
+	within_time = current_time + timedelta(3) # current time + 3 days
+    	events = AnEvent.query.filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time))
+    	return render_template('index.html', events=events)
 
 @web.route('/home', methods = ['GET'])
 def home():

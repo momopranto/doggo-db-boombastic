@@ -34,16 +34,37 @@ class AGroup(db.Model):
 	description = db.Column(db.Text())
 	creator = db.Column(db.String(20), db.ForeignKey('member.username'))
 
-	def __init__(self, group_name, description, creator):
+	def __init__(self, group_name, description, creator, category, interest):
 		self.group_name = group_name
 		self.description = description
 		self.creator = creator
+		interest = Interest(category, keyword)
+		db.session.add(interest)
+		db.session.commit()
+		interestedin = InterestedIn(creator, category, keyword)
+		db.session.add(interestedin)
+		db.session.commit()
+		about = About(self.group_id, category, keyword)
+		db.session.add(about)
+		db.session.commit()
+		db.session.close()
 
 class Interest(db.Model):
 	category = db.Column(db.String(20), primary_key=True)
 	keyword = db.Column(db.String(20), primary_key=True)
 
 	def __init__(self, category, keyword):
+		self.category = category
+		self.keyword = keyword
+
+class About(db.Model):
+	group_id = db.Column(db.Integer(), db.ForeignKey('AGroup.group_id'), primary_key=True)
+	category = db.Column(db.String(20), primary_key=True)
+	keyword = db.Column(db.String(20), primary_key=True)	
+	db.ForeignKeyConstraint(['category', 'keyword'], ['interest.category', 'interest.keyword'])
+
+	def __init__(self, group_id, category, keyword):
+		self.group_id = group_id
 		self.category = category
 		self.keyword = keyword
 
@@ -57,11 +78,7 @@ class InterestedIn(db.Model):
 		self.username = username
 		self.category = category
 		self.keyword = keyword
-		interest = Interest(category, keyword)
-		db.session.add(interest)
-		db.session.commit()
-		db.session.close()
-
+		
 class BelongsTo(db.Model):
 	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
