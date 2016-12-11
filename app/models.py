@@ -113,9 +113,9 @@ class AnEvent(db.Model):
 	zipcode = db.Column(db.Integer())
 	db.ForeignKeyConstraint(['location_name', 'zipcode'], ['location.location_name', 'location.zipcode'])
 
-	def __init__(self, title, description, start_time, end_time, location_name, zipcode):
+	def __init__(self, title, description, start_time, end_time, location_name, zipcode, lat, lon):
             if not Location.query.filter_by(location_name=location_name, zipcode=zipcode).first():
-                location = Location(location_name, zipcode, '','',0,0)
+                location = Location(location_name, zipcode, '','',lat,lon)
 		db.session.add(location)
 		db.session.commit()
 		db.session.close()
