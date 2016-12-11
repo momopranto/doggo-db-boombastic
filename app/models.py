@@ -34,7 +34,7 @@ class AGroup(db.Model):
 	description = db.Column(db.Text())
 	creator = db.Column(db.String(20), db.ForeignKey('member.username'))
 
-	def __init__(self, creator, group_name, description, category, interest):
+	def __init__(self, creator, group_name, description, category, keyword):
 		self.group_name = group_name
 		self.description = description
 		self.creator = creator
@@ -47,7 +47,11 @@ class AGroup(db.Model):
 		about = About(self.group_id, category, keyword)
 		db.session.add(about)
 		db.session.commit()
+		belongsto = BelongsTo(self.group_id, creator)
+		db.session.add(belongsto)
+		db.session.commit()
 		db.session.close()
+		
 
 class Interest(db.Model):
 	category = db.Column(db.String(20), primary_key=True)
@@ -84,8 +88,9 @@ class BelongsTo(db.Model):
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 	authorized = db.Column(db.Boolean(), default=1)
 
-	def __init__(self, username):
+	def __init__(self, username, group_id):
 		self.username = username
+		self.group_id = group_id
 
 class Location(db.Model):
 	location_name = db.Column(db.String(20), primary_key=True)

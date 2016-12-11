@@ -16,6 +16,7 @@ def index():
 
 @web.route('/home', methods = ['GET'])
 def home():
+<<<<<<< HEAD
     if session['auth']:
 	   current_time = datetime.utcnow()
 	   within_time = current_time + timedelta(3) # current time + 3 days
@@ -23,9 +24,26 @@ def home():
        return render_template('home.html', events=events)
     else:
         return redirect(url_for('web.login'))
+=======
+    try:
+        if session['auth']:
+            current_time = datetime.utcnow()
+            within_time = current_time + timedelta(3) # current time + 3 days
+            events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
+            return render_template('index.html', events=events)
+    except:
+        pass
+    return redirect(url_for('web.login'))
+>>>>>>> 38503efa4d7f4a0e489f2d145ddfd2180a40cec1
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
+    try:
+        if session['auth']:
+            return redirect(url_for('web.home'))
+    except:
+        pass
+
     if request.method == 'POST' and len(request.form) == 2:
 	username = request.form['username']
 	member = Member.query.filter_by(username=username).first()
@@ -46,11 +64,21 @@ def login():
 
 @web.route('/logout')
 def logout():
-    session.clear()
-    return redirect(url_for("web.login"))
+    try:
+        if session['auth']:
+            session.clear()
+            return redirect(url_for("web.login"))
+    except:
+        return redirect(url_for('web.login'))
 
 @web.route('/register', methods = ['GET', 'POST'])
 def register():
+    try:
+        if session['auth']:
+            return redirect(url_for('web.home'))
+    except:
+        pass
+
     if request.method == 'POST' and len(request.form) == 6:
         errors = []
         firstname = request.form['first-name']
@@ -106,6 +134,12 @@ def groups():
 
 @web.route('/create_event', methods=['GET','POST'])
 def create_event():
+    try:
+        if session['auth']:
+            pass
+    except:
+        return redirect(url_for('web.login'))
+
     if request.method == 'POST' and len(request.form) == 6:
         errors = []
         try:
@@ -184,14 +218,39 @@ def create_group():
             return render_template('create_group.html')
     else:
         redirect(url_for('web.login'))
+    try:
+        if session['auth']:
+            pass
+    except:
+        return redirect(url_for('web.login'))
+
+    if request.method == "POST" and len(request.form) == 4:
+	name = request.form['name']
+	description = request.form['description']
+	category = request.form['category']
+	keyword = request.keyword['keyword']
+	group = AGroup(session['username'], name, description, category, keyword)
+	db.session.add(group)
+	db.session.commit()
+	db.session.close()
+        return render_template('create_group.html')
 
 @web.route('/signup', methods = ['POST'])
 def signup():
+	
+    return redirect(url_for('web.events'))
 
-    return redirect(url_for("web.events"))
+@web.route('/join', methods = ['POST'])
+def join():
+	return redirect(url_for('web.groups'))
 
 @web.route('/rate', methods = ['GET'])
 def rate():
+    try:
+        if session['auth']:
+            pass
+    except:
+        return redirect(url_for('web.login'))
     if request.args.get('eid') and request.args.get('rating'):
         eid = request.args.get('eid')
         rating = request.args.get('rating')
