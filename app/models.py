@@ -51,7 +51,7 @@ class AGroup(db.Model):
 		db.session.add(belongsto)
 		db.session.commit()
 		db.session.close()
-		
+
 
 class Interest(db.Model):
 	category = db.Column(db.String(20), primary_key=True)
@@ -88,9 +88,10 @@ class BelongsTo(db.Model):
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 	authorized = db.Column(db.Boolean(), default=1)
 
-	def __init__(self, username, group_id):
+	def __init__(self, username, group_id, authorized):
 		self.username = username
 		self.group_id = group_id
+		self.authorized = authorized
 
 class Location(db.Model):
 	location_name = db.Column(db.String(20), primary_key=True)
@@ -124,6 +125,7 @@ class AnEvent(db.Model):
 		db.session.add(location)
 		db.session.commit()
 		db.session.close()
+
             self.title = title
             self.description = description
             self.start_time = start_time
