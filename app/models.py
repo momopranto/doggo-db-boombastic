@@ -84,7 +84,7 @@ class Organize(db.Model):
 class SignUp(db.Model):
 	event_id = db.Column(db.Integer(), db.ForeignKey('an_event.event_id'), primary_key=True)
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
-	rating = db.Column(db.Integer())
+	rating = db.Column(db.Integer(), default=None)
 
 	def __init__(self, event_id, username):
 		self.event_id = event_id

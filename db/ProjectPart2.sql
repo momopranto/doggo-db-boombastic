@@ -169,7 +169,7 @@ CREATE TABLE `organize` (
 CREATE TABLE `sign_up` (
   `event_id` int(20) NOT NULL,
   `username` varchar(20) NOT NULL DEFAULT '',
-  `rating` int(1) NOT NULL,
+  `rating` int(1) NULL,
       PRIMARY KEY (`event_id`,`username`),
   FOREIGN KEY (`event_id`) REFERENCES `an_event` (`event_id`),
   FOREIGN KEY (`username`) REFERENCES `member` (`username`)
