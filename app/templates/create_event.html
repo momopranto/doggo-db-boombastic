@@ -3,43 +3,49 @@
 {% block content %}
 <div class="wrapper">
 	<h2> Create a new event for {{group_name}}</h2><br>
-  {%if error is defined %}
+    
+    {%for error in errors %}
     <div class="alert alert-danger alert-dismissable">
-      <span class="sr-only">Error:</span>
-      {{error}}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-    </div>  
-  {% endif %}
-  
-<form class="form-horizontal" action="/create" method="POST">
+        <span class="sr-only">Error:</span>{{error}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    {% endfor %}
+
+<form class="form-horizontal" action="/create_event" method="POST">
   <div class="form-group">
     <label class="control-label col-sm-1" for="title">Title:</label>
     <div class="col-sm-10">
-      <input style="wnameth: 250px" type="text" class="form-control" name="title" placeholder="Enter a title">
+        <input style="wnameth: 250px" type="text" class="form-control" name="title" placeholder="Enter a title" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-sm-1" for="title">Description:</label>
+    <div class="col-sm-10">
+        <input style="wnameth: 250px" type="text" class="form-control" name="desc" placeholder="Enter a description" required>
     </div>
   </div>
   <div class="form-group">
     <label class="control-label col-sm-1" for="start">Start time:</label>
     <div class="col-sm-10"> 
-      <input style="wnameth: 250px" type="text" class="form-control" name="start" placeholder="Enter a starting time">
+      <input style="wnameth: 250px" type="datetime-local" class="form-control" name="start" placeholder="Enter a starting time" required>
     </div>
   </div>
   <div class="form-group">
     <label class="control-label col-sm-1" for="end">End time:</label>
     <div class="col-sm-10">
-      <input style="wnameth: 250px" type="text" class="form-control" name="end" placeholder="Enter an ending time">
+      <input style="wnameth: 250px" type="datetime-local" class="form-control" name="end" placeholder="Enter an ending time" required>
     </div>
   </div>
   <div class="form-group">
     <label class="control-label col-sm-1" for="location">Location:</label>
     <div class="col-sm-10">
-      <input style="wnameth: 250px" type="text" class="form-control" name="location" placeholder="Enter a location">
+      <input style="wnameth: 250px" type="text" class="form-control" name="location" placeholder="Enter a location" required>
     </div>
   </div>
   <div class="form-group">
     <label class="control-label col-sm-1" for="zipcode">Zipcode:</label>
     <div class="col-sm-10">
-      <input style="wnameth: 250px" type="text" class="form-control" name="zipcode" placeholder="Enter a zipcode">
+      <input style="wnameth: 250px" type="text" class="form-control" name="zipcode" placeholder="Enter a zipcode" required>
     </div>
   </div>  
   <div class="form-group"> 

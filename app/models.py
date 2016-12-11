@@ -60,7 +60,7 @@ class Interest(db.Model):
 class About(db.Model):
 	group_id = db.Column(db.Integer(), db.ForeignKey('AGroup.group_id'), primary_key=True)
 	category = db.Column(db.String(20), primary_key=True)
-	keyword = db.Column(db.String(20), primary_key=True)	
+	keyword = db.Column(db.String(20), primary_key=True)
 	db.ForeignKeyConstraint(['category', 'keyword'], ['interest.category', 'interest.keyword'])
 
 	def __init__(self, group_id, category, keyword):
@@ -78,7 +78,7 @@ class InterestedIn(db.Model):
 		self.username = username
 		self.category = category
 		self.keyword = keyword
-		
+
 class BelongsTo(db.Model):
 	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
@@ -95,9 +95,13 @@ class Location(db.Model):
 	latitude = db.Column(db.Float())
 	longitude = db.Column(db.Float())
 
-	def __init__(self, location_name, zipcode):
+        def __init__(self, location_name, zipcode, address, desc, lat, lon):
 		self.location_name = location_name
 		self.zipcode = zipcode
+                self.address = address
+                self.description = desc
+                self.latitude = lat
+                self.longitude = lon
 
 class AnEvent(db.Model):
 	event_id = db.Column(db.Integer(), primary_key=True)
@@ -110,16 +114,17 @@ class AnEvent(db.Model):
 	db.ForeignKeyConstraint(['location_name', 'zipcode'], ['location.location_name', 'location.zipcode'])
 
 	def __init__(self, title, description, start_time, end_time, location_name, zipcode):
-		location = Location(location_name, zipcode)
+            if not Location.query.filter_by(location_name=location_name, zipcode=zipcode).first():
+                location = Location(location_name, zipcode, '','',0,0)
 		db.session.add(location)
 		db.session.commit()
 		db.session.close()
-		self.title = title
-		self.description = description
-		self.start_time = start_time
-		self.end_time = end_time
-		self.location_name = location_name
-		self.zipcode = zipcode
+            self.title = title
+            self.description = description
+            self.start_time = start_time
+            self.end_time = end_time
+            self.location_name = location_name
+            self.zipcode = zipcode
 
 
 class Organize(db.Model):

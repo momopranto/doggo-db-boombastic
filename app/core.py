@@ -11,16 +11,15 @@ web = Blueprint('web', __name__)
 def index():
 	current_time = datetime.utcnow()
 	within_time = current_time + timedelta(3) # current time + 3 days
-    	events = AnEvent.query.filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time))
-    	return render_template('index.html', events=events)
+        events = AnEvent.query.filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time))
+        return render_template('index.html', events=events)
 
 @web.route('/home', methods = ['GET'])
 def home():
 	current_time = datetime.utcnow()
 	within_time = current_time + timedelta(3) # current time + 3 days
-    	events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
-    	return render_template('index.html', events=events)
-	
+        events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
+        return render_template('index.html', events=events)
 
 @web.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -29,6 +28,7 @@ def login():
 	member = Member.query.filter_by(username=username).first()
 	if member:
             if bcrypt.verify(request.form['password'], member.password):
+                session['auth'] = True
 		session['username'] = member.username
                 session['firstname'] = member.firstname
                 session['lastname'] = member.lastname
@@ -58,8 +58,11 @@ def register():
         else:
             username = request.form['username']
 
-        if isinstance(int(request.form['zipcode']), int) and len(request.form['zipcode']) == 5:
-            zipcode = int(request.form['zipcode'])
+        if len(request.form['zipcode']) == 5:
+            try:
+                zipcode = int(request.form['zipcode'])
+            except:
+                errors.append('Invalid zipcode')
         else:
             errors.append('Invalid zipcode')
 
@@ -91,23 +94,65 @@ def register():
 @web.route('/events')
 def events():
 	events = AnEvent.query.all()
-    	return render_template('events.html', events=events)
+        return render_template('events.html', events=events)
 
 @web.route('/groups')
 def groups():
 	groups = AGroup.query.join(About, AGroup.group_id == About.group_id).all()
-    	return render_template('groups.html', groups=groups)
+        return render_template('groups.html', groups=groups)
 
-@web.route('/create_event', methods = ['GET', 'POST'])
+@web.route('/create_event', methods=['GET','POST'])
 def create_event():
-	if request.method == "POST" and len(request.form == 5):
-		errors = []
-		# title = request.form['title']
-		# if isinstance(int(request.form['zipcode']), int) and len(request.form['zipcode']) == 5:
-  #           zipcode = int(request.form['zipcode'])
-  #       else:
-  #           errors.append('Invalid zipcode')
-    	return render_template('create_event.html')
+    if request.method == 'POST' and len(request.form) == 6:
+        errors = []
+        try:
+            if session['auth']:
+
+                if len(request.form['title']) > 0: title = request.form['title']
+                else: errors.append('Title cannot be blank')
+
+                if len(request.form['desc']) > 0: desc = request.form['desc']
+                else: errors.append('Description cannot be blank')
+
+                try:
+                    start = datetime.strptime(request.form['start'],'%Y-%m-%dT%H:%M')
+                    if start < datetime.now():
+                        errors.append("Start time cannot be in the past")
+                except:
+                    errors.append('Not a valid start date')
+
+                try:
+                    end = datetime.strptime(request.form['end'],'%Y-%m-%dT%H:%M')
+                    if end < datetime.now() or end <= start:
+                        errors.append('End time cannot be in the past or before start time.')
+                except:
+                    errors.append('Not a valid end date')
+
+                if len(request.form['location']) > 0: location = request.form['location']
+                else: errors.append('Location cannot be blank')
+
+                if len(request.form['zipcode']) == 5:
+                    try:
+                        zipcode = int(request.form['zipcode'])
+                    except:
+                        errors.append('Invalid zipcode')
+                else:
+                    errors.append('Invalid zipcode')
+
+                if AnEvent.query.filter_by(
+
+        except:
+            return redirect(url_for('web.login'))
+
+        if len(errors) > 0:
+            return render_template('create_event.html', errors=errors)
+        else:
+            e = AnEvent(title, desc, start, end, location, zipcode)
+            db.session.add(e)
+            db.session.commit()
+            db.session.close()
+            return render_template('create_event.html', success='Event was successfully created')
+    return render_template('create_event.html')
 
 @web.route('/create_group')
 def create_group():
@@ -120,7 +165,7 @@ def create_group():
 		db.session.add(group)
 		db.session.commit()
 		db.session.close()
-    	return render_template('create_group.html')
+        return render_template('create_group.html')
 
 @web.route('/signup', methods = ['POST'])
 def signup():
