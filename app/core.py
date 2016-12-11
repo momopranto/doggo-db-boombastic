@@ -12,6 +12,7 @@ def index():
 	current_time = datetime.utcnow()
 	within_time = current_time + timedelta(3) # current time + 3 days
         events = AnEvent.query.filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time))
+        db.session.close()
         return render_template('index.html', events=events)
 
 @web.route('/home', methods = ['GET'])
@@ -30,6 +31,7 @@ def home():
             current_time = datetime.utcnow()
             within_time = current_time + timedelta(3) # current time + 3 days
             events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
+            db.session.close()
             return render_template('index.html', events=events)
     except:
         pass
@@ -47,6 +49,7 @@ def login():
     if request.method == 'POST' and len(request.form) == 2:
 	username = request.form['username']
 	member = Member.query.filter_by(username=username).first()
+        db.session.close()
 	if member:
             if bcrypt.verify(request.form['password'], member.password):
                 session['auth'] = True
@@ -140,7 +143,7 @@ def create_event():
     except:
         return redirect(url_for('web.login'))
 
-    if request.method == 'POST' and len(request.form) == 6:
+    if request.method == 'POST' and len(request.form) == 8:
         errors = []
         try:
             if session['auth']:
@@ -175,13 +178,25 @@ def create_event():
                         errors.append('Invalid zipcode')
                 else:
                     errors.append('Invalid zipcode')
+
+                try:
+                    lat = float(request.form['latitude'])
+                except:
+                    errors.append('Invalid latitude')
+
+                try:
+                    lon = float(request.form['longitude'])
+                except:
+                    errors.append('Invalid longitude')
+
+
         except:
             return redirect(url_for('web.login'))
 
         if len(errors) > 0:
             return render_template('create_event.html', errors=errors)
         else:
-            e = AnEvent(title, desc, start, end, location, zipcode)
+            e = AnEvent(title, desc, start, end, location, zipcode, lat, lon)
             db.session.add(e)
             db.session.commit()
             db.session.close()
