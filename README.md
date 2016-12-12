@@ -35,9 +35,6 @@ Makefile - used to create the database and start the server
 docker-compose.yml - configuration file for the docker container
 serve.py - file to execute the server
 
-# doggo-db-boombastic
-doodoobases project
-
 
 Division of Work:
 Matthew Ricci - Handled the front-end portion of the project. Utilized the Bootstrap CSS/JS framework to create a more user-friendly navbar and to style the various forms across the project that are used to interact with the database. In addition, coded the script for generating a temporary password and emailing it to a user if the user has forgotten their password.
