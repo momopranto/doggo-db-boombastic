@@ -128,11 +128,13 @@ def changePassword():
     if request.method == 'POST' and len(request.form) == 3:
         oldPassword = bcrypt.hash(request.form['oldPassword'])
         username = session['username']
-        canChangePassword = Member.query.filter_by(and_(username=username, password=oldPassword).first()
+        canChangePassword = Member.query.filter_by(and_(username=username, password=oldPassword)).first()
         if canChangePassword:
             if request.form['newPassword'] == request.form['confirmPassword']:
                 member = Member.query.filter_by(username=username).first()
-                member.change_password(request.form['newPassword']); 
+                member.change_password(request.form['newPassword'])
+                return redirect(url_for('web.home', success="Password successfully changed"))
+    return redirect(url_for('web.home', success="Password successfully changed"))
 
 @web.route('/events')
 def events():
