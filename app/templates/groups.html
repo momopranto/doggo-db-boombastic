@@ -35,15 +35,14 @@
     </thead>
     <tbody>
       {%for group in groups%}
-      <tr><td>{{group.group_id}}</td><td>{{group.group_name}}</td><td>{{group.description}}</td><td><button type="submit" class="join" class="btn btn-default" href="/join/{{group.group_id}}"><!--Join-->
+      <tr><td>{{group.group_id}}</td><td>{{group.group_name}}</td><td>{{group.description}}</td><td>
         {% if username is defined %}
             {% if joined_group(username, group.group_id) %}
-            Rate
+            <span>Joined</span>
             {% else %}
-            Join
+              <button type="submit" class="join" class="btn btn-default" href="/join/{{group.group_id}}">Join</button></td></tr>
             {% endif %}
         {% endif %}
-              </button></td></tr>
       {% endfor %}
       <!-- searches for all group and should give user option to join groups-->
     </tbody>
@@ -54,11 +53,10 @@
   <script>
     $(".join").click(function(){
         var button = $(this);
-        console.log($(this).attr("href"));
-        $.get($(this).attr("href"), function(data){
+        var url = $(this).attr("href");
+        $.get(url, function(data){
           if (data == "Success"){
-            button.html("Joined");
-            button.off()
+            button.replaceWith("<span>Joined</span>");
           }  
         });
     });

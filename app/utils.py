@@ -31,7 +31,8 @@ def joined_group(username, group_id):
     return False
 
 def check_rated(username, event_id):
-    if SignUp.query.filter_by(username=username, event_id=event_id).first().rating:
-        return rating
+    s = SignUp.query.filter_by(username=username, event_id=event_id).first().rating
+    if s:
+        return s
     else:
         return False

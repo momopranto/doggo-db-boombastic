@@ -117,6 +117,25 @@ def register():
     else:
         return render_template('register.html')
 
+@web.route('/changePassword', methods = ['GET', 'POST'])
+def changePassword():
+    try:
+        if session['auth']:
+            pass
+    except:
+        return redirect(url_for('web.login'))
+
+    if request.method == 'POST' and len(request.form) == 3:
+        oldPassword = bcrypt.hash(request.form['oldPassword'])
+        username = session['username']
+        canChangePassword = Member.query.filter_by(and_(username=username, password=oldPassword)).first()
+        if canChangePassword:
+            if request.form['newPassword'] == request.form['confirmPassword']:
+                member = Member.query.filter_by(username=username).first()
+                member.change_password(request.form['newPassword'])
+                return redirect(url_for('web.home', success="Password successfully changed"))
+    return redirect(url_for('web.home', success="Password successfully changed"))
+
 @web.route('/events')
 def events():
     try:
@@ -308,9 +327,9 @@ def rate():
     if request.args.get('eid') and request.args.get('rating'):
         eid = request.args.get('eid')
         rating = request.args.get('rating')
-        e = SignUp.query.filter_by(event_id=eid).first()
+        e = SignUp.query.filter_by(event_id=eid, username=session['username']).first()
         if e:
-            e.rate(rating)
+            e.rate(int(rating))
             db.session.commit()
             db.session.close()
             return 'Success'
