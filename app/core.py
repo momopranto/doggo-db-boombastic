@@ -210,15 +210,21 @@ def create_group():
                     errors.append('Please Write a Category')
                 else:
                     category = request.form['category']
-                if (request.form['keyword']) == 0 or ' ' in request.form['keyword']:
+                if len(request.form['keyword']) == 0 or ' ' in request.form['keyword']:
                     errors.append("Please provide a keyword, No spaces")
                 else:
-                    keyword = request.keyword['keyword']
+                    keyword = request.form['keyword']
                 if len(errors) > 0:
                     return render_template('create_group.html', errors=errors)
 
                 group = AGroup(session['username'], name, description, category, keyword)
                 db.session.add(group)
+                db.session.commit()
+                a = About(group.group_id, category, keyword)
+                db.session.add(a)
+                db.session.commit()
+                b = BelongsTo(group.group_id, session['username'], True)
+                db.session.add(b)
                 db.session.commit()
                 db.session.close()
                 session['groups'] = populate_groups(session['username'])

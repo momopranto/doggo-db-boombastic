@@ -44,12 +44,6 @@ class AGroup(db.Model):
 		interestedin = InterestedIn(creator, category, keyword)
 		db.session.add(interestedin)
 		db.session.commit()
-		about = About(self.group_id, category, keyword)
-		db.session.add(about)
-		db.session.commit()
-		belongsto = BelongsTo(self.group_id, creator)
-		db.session.add(belongsto)
-		db.session.commit()
 		db.session.close()
 
 
@@ -62,7 +56,7 @@ class Interest(db.Model):
 		self.keyword = keyword
 
 class About(db.Model):
-	group_id = db.Column(db.Integer(), db.ForeignKey('AGroup.group_id'), primary_key=True)
+	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)
 	category = db.Column(db.String(20), primary_key=True)
 	keyword = db.Column(db.String(20), primary_key=True)
 	db.ForeignKeyConstraint(['category', 'keyword'], ['interest.category', 'interest.keyword'])
@@ -88,7 +82,7 @@ class BelongsTo(db.Model):
 	username = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 	authorized = db.Column(db.Boolean(), default=True)
 
-	def __init__(self, username, group_id, authorized):
+	def __init__(self, group_id, username, authorized):
 		self.username = username
 		self.group_id = group_id
 		self.authorized = authorized
