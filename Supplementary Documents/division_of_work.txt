@@ -1,0 +1,8 @@
+The work put in to create this project was divided up in the following ways for each group member:
+
+[Matthew Ricci](https://github.com/mr4039) - Handled the front-end portion of the project; utilized the Bootstrap CSS/JS framework to create a more user-friendly navbar and to style the various forms across the project that are used to interact with the database; coded the script for generating a temporary password and emailing it to a user if the user has forgotten their password; wrote up and put together all supplementary materials for submission, summarizing how we solved all use cases and with what queries.
+
+[Rasheeq Rahman](https://github.com/simpleandhappy) - Created the models found in models.py that are used by SQLAlchemy to build and interact with the database; commented the queries below their SQLAlchemy equivalents in core.py; implemented the search feature for groups and events; coded the back-end for the forms found on Register and Login; made enhancements to parts of the front-end; coded the features allowing a user to sign up for events as well as join a group.
+
+[Mohammad Al Amin](https://github.com/momopranto) - Wrote a Dockerfile and Makefile for deploying the project easily to different systems; lots of bugfixing and polishing of code; added much of the input validation, making it hard for a user to crash the webapp due to incorrect or unexpected input; wrote the code for allowing a user to create and rate an event; added jinja2 global resources; programmed login checks and verified all URL redirects based on different authorization cases; general design and
+structure of codebase. 
