@@ -125,6 +125,10 @@ def events():
     except:
         return redirect(url_for('web.login'))
     events = AnEvent.query.all()
+    if request.args.get('search'):
+        events = AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+    else:
+        events = AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).all()
     return render_template('events.html', events=events, username=session['username'])
 
 @web.route('/groups', methods = ['GET'])
@@ -266,13 +270,11 @@ def join(group_id):
     joined_check = BelongsTo.query.filter_by(group_id=group_id, username=session['username'])
     if not joined_check:
         join = BelongsTo(group_id, session['username'], False)
-    	db.session.add(join)
+        db.session.add(join)
         db.session.commit()
         db.session.close()
         return redirect(url_for('web.groups'), success = "Successfully Joined Group")
     return redirect(url_for('web.groups'), error = "Already Joined Group")
-
-
 
 @web.route('/rate', methods = ['GET'])
 def rate():

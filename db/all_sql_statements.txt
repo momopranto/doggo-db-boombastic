@@ -84,3 +84,20 @@ used to get all the groups a user is in
 BelongsTo.query.filter_by(username=username, authorized=True)
 SELECT * FROM belongs_to WHERE username = username AND authorized = True;
 used to get all the groups that a user is authorized for
+
+AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+SELECT * FROM an_event NATURAL JOIN organize NATURAL JOIN about WHERE keyword = request.args.get('search');
+used to find all the events organized by the group with a user specified keyword
+
+AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).all()
+SELECT * FROM an_event NATURAL JOIN organize NATURAL JOIN about;
+used to find all the events organized by the group
+
+AGroup.query.join(About, AGroup.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+SELECT * FROM a_group NATURAL JOIN about WHERE keyword = request.args.get('search');
+used to find all the groups with a specific keyword
+
+AGroup.query.join(About, AGroup.group_id == About.group_id).all()
+SELECT * FROM a_group NATURAL JOIN about;
+used to find all the groups and their interests
+
