@@ -19,6 +19,9 @@ class Member(db.Model):
 		self.email = email
 		self.zipcode = zipcode
 
+	def change_password(password):
+		self.password = password
+		session.commit()
 class Friend(db.Model):
 	friend_of = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 	friend_to = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
