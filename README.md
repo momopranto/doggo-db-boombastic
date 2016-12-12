@@ -1,14 +1,15 @@
 # FindFolks Project
 
-Division of Work:
+##Division of Work:
 
-Matthew Ricci - Handled the front-end portion of the project. Utilized the Bootstrap CSS/JS framework to create a more user-friendly navbar and to style the various forms across the project that are used to interact with the database. In addition, coded the script for generating a temporary password and emailing it to a user if the user has forgotten their password.
+[Matthew Ricci](https://github.com/mr4039) - Handled the front-end portion of the project. Utilized the Bootstrap CSS/JS framework to create a more user-friendly navbar and to style the various forms across the project that are used to interact with the database. In addition, coded the script for generating a temporary password and emailing it to a user if the user has forgotten their password.
 
-Rasheeq Rahman - Created the models found in models.py that are used by SQLAlchemy to build and interact with the database; commented the queries below their SQLAlchemy equivalents in core.py; implemented the search feature for groups and events; coded the back-end for the forms found on Register and Login; made enhancements to parts of the front-end; coded the features allowing a user to sign up for events as well as join a group
+[Rasheeq Rahman](https://github.com/simpleandhappy) - Created the models found in models.py that are used by SQLAlchemy to build and interact with the database; commented the queries below their SQLAlchemy equivalents in core.py; implemented the search feature for groups and events; coded the back-end for the forms found on Register and Login; made enhancements to parts of the front-end; coded the features allowing a user to sign up for events as well as join a group.
 
-Mohammed Al Amin - Wrote a Dockerfile and Makefile for distributing the project easily to different computers; lots of bugfixing and polishing of code; added much of the input validation, making it hard for a user to crash the webapp due to incorrect or unexpected input; wrote the code for allowing a user to create an event; programmed login checks and verified all URL redirects based on different use cases; 
+[Mohammad Al Amin](https://github.com/momopranto) - Wrote a Dockerfile and Makefile for deploying the project easily to different systems; lots of bugfixing and polishing of code; added much of the input validation, making it hard for a user to crash the webapp due to incorrect or unexpected input; wrote the code for allowing a user to create and rate an event; adding jinja2 global resources; programmed login checks and verified all URL redirects based on different authorization cases; general design and
+structure of codebase. 
 
-Extra features:
+####Extra features:
 Creating groups - Implemented a feature where users can create groups based on a single, common interest. The groups are publicly listed and can be searched for
 Joining groups - Users can find public groups via the search function and opt to join the groups in order to attend the group's events
 
@@ -47,3 +48,10 @@ Makefile - used to create the database and start the server
 docker-compose.yml - configuration file for the docker container
 serve.py - file to execute the server
 ```
+
+## Setup
+1. Run `make setup` to install dependencies
+2. Modify `app/config.py` with mysql database connection credentials and create database "FindFolks"
+3. Import table definitions (`db/ProjectPart2.sql`)
+    > See "db" option in Makefile for reference
+4. Run `make run` and access app in browser at [http://localhost:4000](http://localhost:4000)
