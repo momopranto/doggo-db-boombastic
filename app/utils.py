@@ -8,8 +8,6 @@ def check_signup(username, event_id):
     db.session.close()
     return signed_up
 
-template_globals.filters['check_signup'] = check_signup
-
 def populate_groups(username):
     groups = BelongsTo.query.filter_by(username=username)
     db.session.close()

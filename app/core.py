@@ -24,7 +24,7 @@ def home():
             within_time = current_time + timedelta(3) # current time + 3 days
             events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
             db.session.close()
-            return render_template('home', events=events)
+            return render_template('index.html', events=events)
     except:
         pass
     return redirect(url_for('web.login'))
@@ -137,53 +137,47 @@ def create_event():
 
     if request.method == 'POST' and len(request.form) == 8:
         errors = []
-        try:
-            if session['auth']:
+        if session['auth']:
+            if len(request.form['title']) > 0: title = request.form['title']
+            else: errors.append('Title cannot be blank')
 
-                if len(request.form['title']) > 0: title = request.form['title']
-                else: errors.append('Title cannot be blank')
+            if len(request.form['desc']) > 0: desc = request.form['desc']
+            else: errors.append('Description cannot be blank')
 
-                if len(request.form['desc']) > 0: desc = request.form['desc']
-                else: errors.append('Description cannot be blank')
+            try:
+                start = datetime.strptime(request.form['start'],'%Y-%m-%dT%H:%M')
+                if start < datetime.now():
+                    errors.append("Start time cannot be in the past")
+            except:
+                errors.append('Not a valid start date')
 
+            try:
+                end = datetime.strptime(request.form['end'],'%Y-%m-%dT%H:%M')
+                if end < datetime.now() or end <= start:
+                    errors.append('End time cannot be in the past or before start time.')
+            except:
+                errors.append('Not a valid end date')
+
+            if len(request.form['location']) > 0: location = request.form['location']
+            else: errors.append('Location cannot be blank')
+
+            if len(request.form['zipcode']) == 5:
                 try:
-                    start = datetime.strptime(request.form['start'],'%Y-%m-%dT%H:%M')
-                    if start < datetime.now():
-                        errors.append("Start time cannot be in the past")
+                    zipcode = int(request.form['zipcode'])
                 except:
-                    errors.append('Not a valid start date')
-
-                try:
-                    end = datetime.strptime(request.form['end'],'%Y-%m-%dT%H:%M')
-                    if end < datetime.now() or end <= start:
-                        errors.append('End time cannot be in the past or before start time.')
-                except:
-                    errors.append('Not a valid end date')
-
-                if len(request.form['location']) > 0: location = request.form['location']
-                else: errors.append('Location cannot be blank')
-
-                if len(request.form['zipcode']) == 5:
-                    try:
-                        zipcode = int(request.form['zipcode'])
-                    except:
-                        errors.append('Invalid zipcode')
-                else:
                     errors.append('Invalid zipcode')
+            else:
+                errors.append('Invalid zipcode')
 
-                try:
-                    lat = float(request.form['latitude'])
-                except:
-                    errors.append('Invalid latitude')
+            try:
+                lat = float(request.form['latitude'])
+            except:
+                errors.append('Invalid latitude')
 
-                try:
-                    lon = float(request.form['longitude'])
-                except:
-                    errors.append('Invalid longitude')
-
-
-        except:
-            return redirect(url_for('web.login'))
+            try:
+                lon = float(request.form['longitude'])
+            except:
+                errors.append('Invalid longitude')
 
         if len(errors) > 0:
             return render_template('create_event.html', errors=errors)
@@ -191,60 +185,49 @@ def create_event():
             e = AnEvent(title, desc, start, end, location, zipcode, lat, lon)
             db.session.add(e)
             db.session.commit()
+            o = Organize(e.event_id, check_authorized())
+            eb.session.add(o)
+            db.session.commit()
             db.session.close()
             return render_template('create_event.html', success='Event was successfully created')
     return render_template('create_event.html')
 
-@web.route('/create_group')
+@web.route('/create_group', methods = ['GET','POST'])
 def create_group():
     try:
-    if session['auth']:
-        if request.method == "POST" and len(request.form) == 4:
-            errors = []
-            if request.form['name'] == 0:
-                errors.append('Group Name too short')
-            else:
-            name = request.form['name']
-            if request.form['description'] == 0:
-                errors.append('Please Provide a description')
-            else:
-                description = request.form['description']
-            if request.form['category'] == 0:
-                errors.append('Please Write a Category')
-            else:
-                category = request.form['category']
-            if request.form['keyword'] == 0 or ' ' in request.form['keyword']:
-                errors.append("Please provide a keyword, No spaces")
-            else:
-                keyword = request.keyword['keyword']
-            if len(errors) > 0:
-                return render_template('create_group.html', errors=errors)
-            group = AGroup(session['username'], name, description, category, keyword)
-            db.session.add(group)
-            db.session.commit()
-            db.session.close()
-            session['groups'] = populate_groups(session['username'])
-            return render_template('create_group.html')
-    except:
-        redirect(url_for('web.login'))
-    try:
         if session['auth']:
-            pass
+            if request.method == "POST" and len(request.form) == 4:
+                errors = []
+                if len(request.form['name']) == 0:
+                    errors.append('Group Name too short')
+                else:
+                    name = request.form['name']
+                if len(request.form['description']) == 0:
+                    errors.append('Please Provide a description')
+                else:
+                    description = request.form['description']
+                if len(request.form['category']) == 0:
+                    errors.append('Please Write a Category')
+                else:
+                    category = request.form['category']
+                if (request.form['keyword']) == 0 or ' ' in request.form['keyword']:
+                    errors.append("Please provide a keyword, No spaces")
+                else:
+                    keyword = request.keyword['keyword']
+                if len(errors) > 0:
+                    return render_template('create_group.html', errors=errors)
+
+                group = AGroup(session['username'], name, description, category, keyword)
+                db.session.add(group)
+                db.session.commit()
+                db.session.close()
+                session['groups'] = populate_groups(session['username'])
+                return render_template('create_group.html', success='Group successfully created')
+            else:
+                return render_template('create_group.html')
     except:
         return redirect(url_for('web.login'))
 
-    if request.method == "POST" and len(request.form) == 4:
-	name = request.form['name']
-	description = request.form['description']
-	category = request.form['category']
-	keyword = request.keyword['keyword']
-	group = AGroup(session['username'], name, description, category, keyword)
-	db.session.add(group)
-	db.session.commit()
-	db.session.close()
-        return render_template('create_group.html')
-
-<<<<<<< HEAD
 @web.route('/signup/<event_id>')
 def signup(event_id):
 	signup_check = SignUp.query.filter_by(event_id=event_id, username=session['username'])
@@ -266,15 +249,6 @@ def join(group_id):
         db.session.close()
         return redirect(url_for('web.groups'), success = "Successfully Joined Group")
     return redirect(url_for('web.groups'), error = "Already Joined Group")
-=======
-@web.route('/signup', methods = ['POST'])
-def signup():
-    return redirect(url_for('web.events'))
-
-@web.route('/join', methods = ['POST'])
-def join():
-	return redirect(url_for('web.groups'))
->>>>>>> cbdc6ea948a31af0b9d4100219bf21c125fbed57
 
 @web.route('/rate', methods = ['GET'])
 def rate():
