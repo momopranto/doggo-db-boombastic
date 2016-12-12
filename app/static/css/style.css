@@ -21,3 +21,7 @@ body {
 table, th, td{
 	border-right-style:inset;
 }
+
+.gold {
+    color: #f4ce42
+}

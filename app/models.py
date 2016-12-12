@@ -155,5 +155,5 @@ class SignUp(db.Model):
 		self.event_id = event_id
 		self.username = username
 
-	def rate(rating):
+	def rate(self, rating):
 		self.rating = rating

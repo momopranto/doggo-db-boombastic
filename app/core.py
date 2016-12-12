@@ -281,15 +281,15 @@ def rate():
     try:
         if session['auth']:
             pass
-            
+
     except:
         return redirect(url_for('web.login'))
     if request.args.get('eid') and request.args.get('rating'):
         eid = request.args.get('eid')
         rating = request.args.get('rating')
-        e = SignUp.query.filter_by(event_id=eid).first()
+        e = SignUp.query.filter_by(event_id=eid, username=session['username']).first()
         if e:
-            e.rate(rating)
+            e.rate(int(rating))
             db.session.commit()
             db.session.close()
             return 'Success'
