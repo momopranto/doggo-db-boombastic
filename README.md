@@ -12,6 +12,7 @@ Extra features:
 Creating groups - Implemented a feature where users can create groups based on a single, common interest. The groups are publicly listed and can be searched for
 Joining groups - Users can find public groups via the search function and opt to join the groups in order to attend the group's events
 
+```
 /app
 	/templates
 		base.html - served as the template base
@@ -21,7 +22,6 @@ Joining groups - Users can find public groups via the search function and opt to
 		home.html - home page for users
 		index.html - first page seen
 		login.html - template used for users to login
-		lostpassword.html - template used when users forget their password
 		register.html - template that registers users
 
 	/static
@@ -35,7 +35,6 @@ Joining groups - Users can find public groups via the search function and opt to
 	__init__.py - initialized databases and registered necessary pages
 	config.py - setup the server setting for the app
 	core.py - full backend of all pages used in the app
-	create_temp_pass.py - used to give users a temp password
 	models.py - held all the database tables derived from ProjectPart2.sql 
 	utils.py - utility functions necessary for the app
 /db
@@ -47,3 +46,4 @@ Dockerfile - contains commands a user calls to build a container
 Makefile - used to create the database and start the server
 docker-compose.yml - configuration file for the docker container
 serve.py - file to execute the server
+```
