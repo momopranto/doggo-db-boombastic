@@ -119,7 +119,10 @@ def register():
 
 @web.route('/events')
 def events():
-    events = AnEvent.query.all()
+    if request.args.get('search'): 
+        events = AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+    else:    
+        events = AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).all()
     return render_template('events.html', events=events, username=session['username'])
 
 @web.route('/groups', methods = ['GET'])
