@@ -11,9 +11,7 @@ def create_app():
     import config
 
     app.config.from_object(config)
-    # db.init_app(app)
-    # db.app = app
-    # app.db = db
+
     if not database_exists(app.config['SQLALCHEMY_DATABASE_URI']): #create database
         create_database(app.config['SQLALCHEMY_DATABASE_URI'])
 
@@ -21,11 +19,12 @@ def create_app():
     db.app = app #initialize db
     db.create_all() #create tables
     app.db = db #set the app's db to db
-    
+
+    from utils import init_utils
     from core import web
+
+    init_utils(app)
     app.register_blueprint(web)
 
     return app
-
-
 

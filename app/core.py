@@ -4,7 +4,7 @@ from passlib.hash import bcrypt_sha256 as bcrypt
 from flask import *
 from models import db, Member, Friend, AGroup, Interest, InterestedIn, BelongsTo, Location, AnEvent, Organize, SignUp, About
 from sqlalchemy import and_
-from utils import populate_groups
+from utils import populate_groups, check_authorized
 
 web = Blueprint('web', __name__)
 
@@ -119,17 +119,16 @@ def register():
 
 @web.route('/events')
 def events():
-	events = AnEvent.query.all()
-        return render_template('events.html', events=events)
+    events = AnEvent.query.all()
+    return render_template('events.html', events=events, username=session['username'])
 
-@web.route('/groups', method = ['GET'])
+@web.route('/groups', methods = ['GET'])
 def groups():
-	if request.args.get('search'):
-            groups = AGroup.query.join(About, AGroup.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
-    else:         
+    if request.args.get('search'):
+        groups = AGroup.query.join(About, AGroup.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+    else:
         groups = AGroup.query.join(About, AGroup.group_id == About.group_id).all()
-    
-    return render_template('groups.html', groups=groups)
+    return render_template('groups.html', groups=groups, username=session['username'])
 
 @web.route('/create_event', methods=['GET','POST'])
 def create_event():
@@ -189,8 +188,11 @@ def create_event():
             e = AnEvent(title, desc, start, end, location, zipcode, lat, lon)
             db.session.add(e)
             db.session.commit()
-            o = Organize(e.event_id, check_authorized())
-            eb.session.add(o)
+            o = Organize(e.event_id, check_authorized(session['username']))
+            db.session.add(o)
+            db.session.commit()
+            s = SignUp(e.event_id, session['username'])
+            db.session.add(s)
             db.session.commit()
             db.session.close()
             return render_template('create_event.html', success='Event was successfully created')
