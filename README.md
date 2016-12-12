@@ -1,2 +1,36 @@
-# doggo-db-boombastic
-doodoobases project
+# FindFolks Project
+/app
+	/templates
+		base.html - served as the template base
+		create_event.html - template for the create events form
+		events.html - displayed all events 
+		groups.html - displayed all groups
+		home.html - home page for users
+		index.html - first page seen
+		login.html - template used for users to login
+		lostpassword.html - template used when users forget their password
+		register.html - template that registers users
+
+	/static
+		/css - style for the website
+			bootstrap.min.css
+			style.css
+		/js - dynamic styling for the app
+			bootstrap.min.js
+			jquery-3.1.1.min.js
+	
+	__init__.py - initialized databases and registered necessary pages
+	config.py - setup the server setting for the app
+	core.py - full backend of all pages used in the app
+	create_temp_pass.py - used to give users a temp password
+	models.py - held all the database tables derived from ProjectPart2.sql 
+	utils.py - utility functions necessary for the app
+/db
+	ProjectPart2.sql - original tables
+	all_sql_statements.txt - contains all the sql statements and reason for usage
+
+.gitignore - states to git which files to ignore
+Dockerfile - contains commands a user calls to build a container
+Makefile - used to create the database and start the server
+docker-compose.yml - configuration file for the docker container
+serve.py - file to execute the server

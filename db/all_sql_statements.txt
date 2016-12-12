@@ -1,0 +1,69 @@
+AnEvent.query.filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time))
+SELECT * FROM an_event WHERE start_time = current_time AND end_time = within_time;
+Used for the index page to display events within three days
+
+AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
+SELECT * FROM an_event NATURAL JOIN sign_up WHERE start_time = current_time AND end_time = within_time AND username = session['username'];
+used in the home page to display events the user is attending within 3 days
+
+Member.query.filter_by(username=username).first()
+SELECT * FROM member WHERE username=username;
+used for the check to see if the username already exists
+
+Member.query.filter_by(username=request.form['username']).first()
+SELECT * FROM member WHERE username=request.form['username'];
+Gets the username with username from the form in order to log in
+
+Member.query.filter_by(email=request.form['email']).first()
+SELECT * FROM member WHERE email=request.form['email'];
+used to check for duplicate emails
+
+member = Member(username, password, firstname, lastname, email, zipcode)
+db.session.add(member)
+db.session.commit()
+db.session.close()
+INSERT INTO member (username, password, firstname, lastname, email, zipcode) VALUES (username, password, firstname, lastname, email, zipcode);
+used to insert member into the database
+
+AnEvent.query.all()
+SELECT * FROM an_event;
+gets all the events for the events page
+
+AGroup.query.join(About, AGroup.group_id == About.group_id).all()
+SELECT * FROM a_group NATURAL JOIN about;
+used to display all groups with category and keyword
+
+AnEvent(title, desc, start, end, location, zipcode, lat, lon)
+INSERT INTO member (title, description, start_time, end_time, location, zipcode, latitude, longitude) VALUES (title, desc, start, end, location, zipcode, lat, lon);
+
+AGroup(session['username'], name, description, category, keyword)
+INSERT INTO group (creator, name, description) VALUES (session['username'], name, description);
+Interest(category, keyword)
+INSERT INTO interest (category, keyword) VALUES (category, keyword);
+InterestedIn(creator, category, keyword)
+INSERT INTO interested_in (creator, category, keyword) VALUES (creator, category, keyword);
+About(self.group_id, category, keyword)
+INSERT INTO group (group_id, category, keyword) VALUES (self.group_id, category, keyword);
+BelongsTo(self.group_id, creator)
+INSERT INTO group (group_id, username, authorized) VALUES (self.group_id, creator, True);
+
+SignUp.query.filter_by(event_id=event_id, username=session['username'])
+SELECT * FROM sign_up WHERE event_id = event_id AND username = session['username'];
+
+SignUp(event_id, session['username'])
+INSERT INTO sign_up (event_id, username) VALUES (event_id, session['username']);
+
+BelongsTo.query.filter_by(group_id=group_id, username=session['username'])
+SELECT * FROM sign_up WHERE group_id = group_id AND username = session['username'];
+
+BelongsTo(group_id, session['username'], False)
+INSERT INTO group (group_id, username, authorized) VALUES (group_id, session['username'], False);
+
+SignUp.query.filter(and_(SignUp.username == username, SignUp.event_id == event_id))
+SELECT * FROM sign_up WHERE username = username AND event_id = event_id;
+
+BelongsTo.query.filter_by(username=username)
+SELECT * FROM belongs_to WHERE username = username;
+
+BelongsTo.query.filter_by(username=username, authorized=True)
+SELECT * FROM belongs_to WHERE username = username AND authorized = True;

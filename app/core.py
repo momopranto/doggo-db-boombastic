@@ -122,10 +122,14 @@ def events():
 	events = AnEvent.query.all()
         return render_template('events.html', events=events)
 
-@web.route('/groups')
+@web.route('/groups', method = ['GET'])
 def groups():
-	groups = AGroup.query.join(About, AGroup.group_id == About.group_id).all()
-        return render_template('groups.html', groups=groups)
+	if request.args.get('search'):
+            groups = AGroup.query.join(About, AGroup.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+    else:         
+        groups = AGroup.query.join(About, AGroup.group_id == About.group_id).all()
+    
+    return render_template('groups.html', groups=groups)
 
 @web.route('/create_event', methods=['GET','POST'])
 def create_event():
@@ -255,6 +259,8 @@ def join(group_id):
         db.session.close()
         return redirect(url_for('web.groups'), success = "Successfully Joined Group")
     return redirect(url_for('web.groups'), error = "Already Joined Group")
+
+
 
 @web.route('/rate', methods = ['GET'])
 def rate():
