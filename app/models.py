@@ -22,6 +22,13 @@ class Member(db.Model):
 	def change_password(password):
 		self.password = password
 		session.commit()
+		session.close()
+
+	def change_zipcode(zipcode):
+		self.zipcode = zipcode
+		session.commit()
+		session.close()
+
 class Friend(db.Model):
 	friend_of = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
 	friend_to = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)

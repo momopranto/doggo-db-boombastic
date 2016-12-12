@@ -24,7 +24,7 @@ def home():
             within_time = current_time + timedelta(3) # current time + 3 days
             events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
             db.session.close()
-            return render_template('index.html', events=events)
+            return render_template('home.html', events=events)
     except:
         pass
     return redirect(url_for('web.login'))
@@ -256,31 +256,32 @@ def create_group():
 
 @web.route('/signup/<event_id>')
 def signup(event_id):
-	signup_check = SignUp.query.filter_by(event_id=event_id, username=session['username'])
+	signup_check = SignUp.query.filter_by(event_id=event_id, username=session['username']).first()
         if not signup_check:
             signup = SignUp(event_id, session['username'])
             db.session.add(signup)
             db.session.commit()
             db.session.close()
-            return redirect(url_for('web.events'), success = "Successfully Signed Up for Event")
-        return redirect(url_for('web.events'), error = "Already Signed Up for Event")
+            return "Success"
+        return "Error"
 
 @web.route('/join/<group_id>')
 def join(group_id):
-    joined_check = BelongsTo.query.filter_by(group_id=group_id, username=session['username'])
+    joined_check = BelongsTo.query.filter_by(group_id=group_id, username=session['username']).first()
     if not joined_check:
         join = BelongsTo(group_id, session['username'], False)
         db.session.add(join)
         db.session.commit()
         db.session.close()
-        return redirect(url_for('web.groups'), success = "Successfully Joined Group")
-    return redirect(url_for('web.groups'), error = "Already Joined Group")
+        return "Success"
+    return "Error"
 
 @web.route('/rate', methods = ['GET'])
 def rate():
     try:
         if session['auth']:
             pass
+            
     except:
         return redirect(url_for('web.login'))
     if request.args.get('eid') and request.args.get('rating'):

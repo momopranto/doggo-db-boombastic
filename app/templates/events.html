@@ -55,7 +55,7 @@
                 {% endfor %}
               {% endif %}
             {% else %}
-            <button type="submit" class="btn btn-default" href="/signup/{{event.event_id}}">Sign Up</button>
+            <button id = "signup" type="submit" class="btn btn-default" href="/signup/{{event.event_id}}">Sign Up</button>
             {% endif %}
         {% endif %}
         </td></tr>
@@ -68,8 +68,15 @@
 
 {% block scripts %}
 <script>
-    $(".rate").click(function(this) {
-        console.log(this);
+    // $(".rate").click(function(this) {
+    //     console.log(this);
+    // });
+
+    $("#signup").click(function(){
+        console.log($(this).attr("href"));
+        $.get($(this).attr("href"), function(data){
+
+        });
     });
 </script>
 

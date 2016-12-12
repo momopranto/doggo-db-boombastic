@@ -27,6 +27,7 @@
   <table class="table">
     <thead>
       <tr>
+        <th style="width: 80px">Group ID</th>
         <th style="width: 80px">Name</th>
         <th style="width: 140px">Description</th>
         <th style="width: 70px">Join</th>
@@ -34,7 +35,7 @@
     </thead>
     <tbody>
       {%for group in groups%}
-      <tr><td>{{group.group_name}}</td><td>{{group.description}}</td><td><button type="submit" class="btn btn-default" href="/join/{{group.group_id}}"><!--Join-->
+      <tr><td>{{group.group_id}}</td><td>{{group.group_name}}</td><td>{{group.description}}</td><td><button type="submit" class="join" class="btn btn-default" href="/join/{{group.group_id}}"><!--Join-->
         {% if username is defined %}
             {% if joined_group(username, group.group_id) %}
             Rate
@@ -48,3 +49,20 @@
     </tbody>
   </table>
   {% endblock %}
+
+{% block scripts %}
+  <script>
+    $(".join").click(function(){
+        var button = $(this);
+        console.log($(this).attr("href"));
+        $.get($(this).attr("href"), function(data){
+          if (data == "Success"){
+            button.html("Joined");
+            button.off()
+          }  
+        });
+    });
+
+  </script>
+  
+{%endblock%}
