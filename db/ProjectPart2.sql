@@ -52,8 +52,12 @@ CREATE TABLE `a_group` (
   `group_name` varchar(20) NOT NULL DEFAULT '',
   `description` text NOT NULL,
   `creator` varchar(20) NOT NULL DEFAULT '',
+  `location_name` varchar(20) NOT NULL DEFAULT '',
+  `zipcode` int(5) NOT NULL,
+
     PRIMARY KEY (`group_id`),
-    FOREIGN KEY (`creator`) REFERENCES `member` (`username`)
+    FOREIGN KEY (`creator`) REFERENCES `member` (`username`),
+    FOREIGN KEY (`location_name`, `zipcode`) REFERENCES `location` (`location_name`, `zipcode`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

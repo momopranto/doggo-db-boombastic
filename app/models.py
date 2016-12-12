@@ -19,12 +19,12 @@ class Member(db.Model):
 		self.email = email
 		self.zipcode = zipcode
 
-	def change_password(password):
+	def change_password(self, password):
 		self.password = password
 		session.commit()
 		session.close()
 
-	def change_zipcode(zipcode):
+	def change_zipcode(self, zipcode):
 		self.zipcode = zipcode
 		session.commit()
 		session.close()
@@ -39,20 +39,28 @@ class Friend(db.Model):
 
 
 class AGroup(db.Model):
-	group_id = db.Column(db.Integer(), primary_key=True)
+	group_id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
 	group_name = db.Column(db.String(20))
 	description = db.Column(db.Text())
 	creator = db.Column(db.String(20), db.ForeignKey('member.username'))
+	location_name = db.Column(db.String(20), primary_key=True)
+	zipcode = db.Column(db.Integer(), primary_key=True)
+	db.ForeignKeyConstraint(['location_name', 'zipcode'], ['location.location_name', 'location.zipcode'])
 
-	def __init__(self, creator, group_name, description, category, keyword):
+	def __init__(self, creator, group_name, description, category, keyword, location_name, zipcode, address, desc, latitude, longitude):
 		self.group_name = group_name
 		self.description = description
 		self.creator = creator
+		self.location_name = location_name
+		self.zipcode = zipcode
 		interest = Interest(category, keyword)
 		db.session.add(interest)
 		db.session.commit()
 		interestedin = InterestedIn(creator, category, keyword)
 		db.session.add(interestedin)
+		db.session.commit()
+		location = Location(location_name, zipcode, address, desc, latitude, longitude)
+		db.session.add(location)
 		db.session.commit()
 		db.session.close()
 
@@ -157,3 +165,8 @@ class SignUp(db.Model):
 
 	def rate(rating):
 		self.rating = rating
+
+class LocatedAt(db.Model):
+	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)	
+	
+
