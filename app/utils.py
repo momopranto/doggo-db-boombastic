@@ -18,6 +18,7 @@ def check_authorized(username):
 def init_utils(app):
     app.jinja_env.globals.update(signed_up=signed_up)
     app.jinja_env.globals.update(joined_group=joined_group)
+    app.jinja_env.globals.update(check_rated=check_rated)
 
 def signed_up(username, event_id):
     if SignUp.query.filter_by(username=username, event_id=event_id).first():
@@ -28,3 +29,9 @@ def joined_group(username, group_id):
     if BelongsTo.query.filter_by(username=username, group_id=group_id).first():
         return True
     return False
+
+def check_rated(username, event_id):
+    if SignUp.query.filter_by(username=username, event_id=event_id).first().rating:
+        return rating
+    else:
+        return False

@@ -33,24 +33,43 @@
         <th style="width: 70px">Ending time</th>
         <th style="width: 70px">Location</th>
         <th style="width: 30px">Zipcode</th>
-        <th style="width: 70px">Sign Up</th>
+        <th style="width: 70px">Sign Up/Rate</th>
       </tr>
     </thead>
     <tbody>
       
       {%for event in events%}
-          <tr><td>{{event.event_id}}</td><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td><td><button type="submit" class="btn btn-default" action="/signup/{{event.event_id}}">
+          <tr><td>{{event.event_id}}</td><td>{{event.title}}</td><td>{{event.description}}</td><td>{{event.start_time}}</td><td>{{event.end_time}}</td><td>{{event.location_name}}</td><td>{{event.zipcode}}</td><td>
         {% if username is defined %}
             {% if signed_up(username, event.event_id) %}
-            Rate
+              {% if not check_rated(username, event.event_id) %}
+            <a class="rate one" href="/rate?eid={{ event.event_id}}&rating=1"><i class="glyphicon glyphicon-star"></i></a>
+            <a class="rate two" href="/rate?eid={{ event.event_id}}&rating=2"><i class="glyphicon glyphicon-star"></i></a>
+            <a class="rate three" href="/rate?eid={{ event.event_id}}&rating=3"><i class="glyphicon glyphicon-star"></i></a>
+            <a class="rate four" href="/rate?eid={{ event.event_id}}&rating=4"><i class="glyphicon glyphicon-star"></i></a>
+            <a class="rate five" href="/rate?eid={{ event.event_id}}&rating=5"><i class="glyphicon glyphicon-star"></i></a>
+              {% else %}
+                {% for n in range(check_rated(username, event.event_id)) %}
+                <i class="glyphicon glyphicon-star"></i>
+                {% endfor %}
+              {% endif %}
             {% else %}
-            Sign Up
+            <button type="submit" class="btn btn-default" action="/signup/{{event.event_id}}">Sign Up</button>
             {% endif %}
         {% endif %}
-        </button></td></tr>
+        </td></tr>
       {% endfor %}
       
       <!-- searches for all event and should give user option to signup for them-->
     </tbody>
   </table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(".rate").click(function(this) {
+        console.log(this);
+    });
+</script>
+
 {% endblock %}

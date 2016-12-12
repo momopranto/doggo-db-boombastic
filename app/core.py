@@ -119,11 +119,21 @@ def register():
 
 @web.route('/events')
 def events():
+    try:
+        if session['auth']:
+            pass
+    except:
+        return redirect(url_for('web.login'))
     events = AnEvent.query.all()
     return render_template('events.html', events=events, username=session['username'])
 
 @web.route('/groups', methods = ['GET'])
 def groups():
+    try:
+        if session['auth']:
+            pass
+    except:
+        return redirect(url_for('web.login'))
     if request.args.get('search'):
         groups = AGroup.query.join(About, AGroup.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
     else:
