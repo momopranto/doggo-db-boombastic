@@ -27,6 +27,7 @@
         {% if session.username is defined %}
         <li><a href="/home">{{ session.username }}</a></li>
         <li><a href="/logout">Logout</a></li>
+        <li><a href="/change_password">Change Password</a></li>
         {% else %}
         <li><a href="/login">Login</a></li>
         <li><a href="/register">Register</a></li>

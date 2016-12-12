@@ -117,7 +117,7 @@ def register():
     else:
         return render_template('register.html')
 
-@web.route('/changePassword', methods = ['GET', 'POST'])
+@web.route('/change_password', methods = ['GET', 'POST'])
 def changePassword():
     try:
         if session['auth']:
