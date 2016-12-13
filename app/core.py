@@ -137,6 +137,29 @@ def changepassword():
             return redirect(url_for('web.home', error="Password change failed, please confirm your current password"))
     return render_template('change_password.html')
 
+@web.route('/change_zipcode', methods = ['GET', 'POST'])
+def change_zipcode():
+    try:
+        if session['auth']:
+            pass
+    except:
+        return redirect(url_for('web.login'))
+    if request.method == 'POST' and len(request.form) == 3:
+        try:
+            if len(request.form['new_zipcode']) == 5 and len(request.form['confirm_zipcode']) == 5 and len(request.form['old_zipcode']) == 5: 
+                if request.form['new_zipcode'] == request.form['confirm_zipcode']:
+                    member = Member.query.filter_by(username=session['username']).first()
+                    if member and int(request.form['old_zipcode']) == member.zipcode:
+                        member.change_zipcode(int(request.form['new_zipcode']))
+                        return redirect(url_for('web.home', success="Zipcode successfully changed"))
+                    else:
+                        return redirect(url_for('web.home', error="Zipcode could not be changed"))
+            else:
+                return render_template("change_zipcode.html", error="Not a valid Zipcode")
+        except:
+            return render_template("change_zipcode.html", error="Not a valid Zipcode")     
+    return render_template("change_zipcode.html")
+            
 @web.route('/events')
 def events():
     try:
