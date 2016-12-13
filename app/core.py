@@ -117,8 +117,8 @@ def register():
     else:
         return render_template('register.html')
 
-@web.route('/changePassword', methods = ['GET', 'POST'])
-def changePassword():
+@web.route('/change_password', methods = ['GET', 'POST'])
+def changepassword():
     try:
         if session['auth']:
             pass
@@ -126,15 +126,16 @@ def changePassword():
         return redirect(url_for('web.login'))
 
     if request.method == 'POST' and len(request.form) == 3:
-        oldPassword = bcrypt.hash(request.form['oldPassword'])
-        username = session['username']
-        canChangePassword = Member.query.filter_by(and_(username=username, password=oldPassword)).first()
-        if canChangePassword:
-            if request.form['newPassword'] == request.form['confirmPassword']:
-                member = Member.query.filter_by(username=username).first()
-                member.change_password(request.form['newPassword'])
+        if request.form['newPassword'] == request.form['confirmPassword']:
+            member = Member.query.filter_by(username=session['username']).first()
+            if member and bcrypt.verify(request.form['oldPassword'], member.password):
+                new_pass = bcrypt.hash(request.form['newPassword'])
+                member.change_password(new_pass)
                 return redirect(url_for('web.home', success="Password successfully changed"))
-    return redirect(url_for('web.home', success="Password successfully changed"))
+            return redirect(url_for('web.home', error="Password could not be changed"))
+        else:
+            return redirect(url_for('web.home', error="Password change failed, please confirm your current password"))
+    return render_template('change_password.html')
 
 @web.route('/events')
 def events():
@@ -146,6 +147,14 @@ def events():
     events = AnEvent.query.all()
     if request.args.get('search'):
         events = AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+    elif request.args.get('search_zip'):
+        try:
+            if len(request.args.get('search_zip')) == 5:
+                events = AnEvent.query.filter_by(zipcode=int(request.args.get('search_zip')))
+            else:
+                return render_template('events.html', error='Not Valid Zipcode', username=session['username'])
+        except:
+            return render_template('events.html', error='Not Valid Zipcode', username=session['username'])
     else:
         events = AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).all()
     return render_template('events.html', events=events, username=session['username'])
@@ -159,6 +168,14 @@ def groups():
         return redirect(url_for('web.login'))
     if request.args.get('search'):
         groups = AGroup.query.join(About, AGroup.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+    elif request.args.get('search_zip'):
+        try:
+            if len(request.args.get('search_zip')) == 5:
+                groups = AGroup.query.filter_by(zipcode=int(request.args.get('search_zip')))
+            else:
+                return render_template('groups.html', error='Not Valid Zipcode', username=session['username'])
+        except:
+            return render_template('groups.html', error='Not Valid Zipcode', username=session['username'])
     else:
         groups = AGroup.query.join(About, AGroup.group_id == About.group_id).all()
     return render_template('groups.html', groups=groups, username=session['username'])
@@ -253,9 +270,9 @@ def create_group():
                 errors.append("Please provide a keyword, No spaces")
             else:
                 keyword = request.form['keyword']
-            if len(request.form['location']) > 0: 
+            if len(request.form['location']) > 0:
                 location = request.form['location']
-            else: 
+            else:
                 errors.append('Location cannot be blank')
             if len(request.form['zipcode']) == 5:
                 try:

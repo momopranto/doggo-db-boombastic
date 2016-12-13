@@ -20,10 +20,11 @@ def create_app():
     db.create_all() #create tables
     app.db = db #set the app's db to db
 
-    from utils import init_utils
+    from utils import init_utils, init_errors
     from core import web
 
     init_utils(app)
+    init_errors(app)
     app.register_blueprint(web)
 
     return app

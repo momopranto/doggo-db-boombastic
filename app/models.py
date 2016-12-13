@@ -21,13 +21,13 @@ class Member(db.Model):
 
 	def change_password(self, password):
 		self.password = password
-		session.commit()
-		session.close()
+		db.session.commit()
+		db.session.close()
 
 	def change_zipcode(self, zipcode):
 		self.zipcode = zipcode
-		session.commit()
-		session.close()
+		db.session.commit()
+		db.session.close()
 
 class Friend(db.Model):
 	friend_of = db.Column(db.String(20), db.ForeignKey('member.username'), primary_key=True)
@@ -167,6 +167,6 @@ class SignUp(db.Model):
 		self.rating = rating
 
 class LocatedAt(db.Model):
-	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)	
-	
+	group_id = db.Column(db.Integer(), db.ForeignKey('a_group.group_id'), primary_key=True)
+
 
