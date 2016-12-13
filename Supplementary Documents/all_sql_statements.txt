@@ -137,7 +137,7 @@ used to insert a belongsto object into the database
 ------------
 
 Sign up for an event - a user can sign up for an event that they find if they are interested in it and are a part of the group
-????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????/
+
 SignUp.query.filter_by(event_id=event_id, username=session['username'])
 SELECT * FROM sign_up WHERE event_id = event_id AND username = session['username'];
 used to check if a user is already signed up for an event
@@ -146,33 +146,23 @@ SignUp(event_id, session['username'])
 INSERT INTO sign_up (event_id, username) VALUES (event_id, session['username']);
 used to insert a signup object into the database, if the user has not already signed up for the event
 
+------------
 
+Change a password - if a users are signed in, they can change their passwords
+
+Member.query.filter_by(and_(username=session['username'], password=oldPassword).first()
+SELECT username FROM Member WHERE username=session['username'] AND password=request.form['oldPassword']
+checks to see if the user entered in a valid username and password combination before changing the password
+
+member = Member.query.filter_by(username=username).first()
+SELECT username FROM Member where username=session['username']
+grab the line in the Member database whose username attribute matches the session username
+
+member.change_password(request.form['newPassword']);
+UPDATE Member SET password=request.form['newPassword']
+changes the user's password based on the username found in the database
 ------------
 
 Logout - user can log out of their session
 ** no queries necessary to perform this
-
-
-
-
-
-
-???????InterestedIn(creator, category, keyword)
-INSERT INTO interested_in (creator, category, keyword) VALUES (creator, category, keyword);
-used to insert interestedin object into the database
-
-
-
-
-
-DELETE
-SignUp.query.filter(and_(SignUp.username == username, SignUp.event_id == event_id))
-SELECT * FROM sign_up WHERE username = username AND event_id = event_id;
-used to check if a user has signed up to an event
-??????????????????????????????????????????????????????
-
-
-
-
-
 
