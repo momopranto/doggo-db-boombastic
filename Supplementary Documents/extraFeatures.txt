@@ -1,0 +1,14 @@
+Extra Features/Use Cases
+
+- Changing a password: If a user is logged into an account, they can change the password associated with the account by providing the current password and a new password to replace it with
+
+- Search groups by Zipcode: This feature employs the extra attributes that our group added to the project schema (giving groups a headquarters with a location). Users can search through groups based on a given zipcode
+
+- Search events by Zipcode: users can search for events to join by entering a valid zipcode into the search bar found under the Events tab
+
+- Create a group: users have the option to create their own groups, complete with a category and interest keyword to help other members find them
+
+- Join a group: users can join up with the groups they search for 
+
+- Change Zipcode: users can change their own zipcode in case they move to another area and want to see available groups and events in their new area
+

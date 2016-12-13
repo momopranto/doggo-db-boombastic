@@ -161,6 +161,7 @@ grab the line in the Member database whose username attribute matches the sessio
 member.change_password(request.form['newPassword']);
 UPDATE Member SET password=request.form['newPassword']
 changes the user's password based on the username found in the database
+
 ------------
 
 Logout - user can log out of their session
