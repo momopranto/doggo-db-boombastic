@@ -118,7 +118,7 @@ def register():
         return render_template('register.html')
 
 @web.route('/change_password', methods = ['GET', 'POST'])
-def changePassword():
+def changepassword():
     try:
         if session['auth']:
             pass
@@ -126,15 +126,16 @@ def changePassword():
         return redirect(url_for('web.login'))
 
     if request.method == 'POST' and len(request.form) == 3:
-        oldPassword = bcrypt.hash(request.form['oldPassword'])
-        username = session['username']
-        canChangePassword = Member.query.filter_by(and_(username=username, password=oldPassword)).first()
-        if canChangePassword:
-            if request.form['newPassword'] == request.form['confirmPassword']:
-                member = Member.query.filter_by(username=username).first()
-                member.change_password(request.form['newPassword'])
+        if request.form['newPassword'] == request.form['confirmPassword']:
+            member = Member.query.filter_by(username=session['username']).first()
+            if member and bcrypt.verify(request.form['oldPassword'], member.password):
+                new_pass = bcrypt.hash(request.form['newPassword'])
+                member.change_password(new_pass)
                 return redirect(url_for('web.home', success="Password successfully changed"))
-    return redirect(url_for('web.home', success="Password successfully changed"))
+            return redirect(url_for('web.home', error="Password could not be changed"))
+        else:
+            return redirect(url_for('web.home', error="Password change failed, please confirm your current password"))
+    return render_template('change_password.html')
 
 @web.route('/events')
 def events():
