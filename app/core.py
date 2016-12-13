@@ -253,9 +253,9 @@ def create_group():
                 errors.append("Please provide a keyword, No spaces")
             else:
                 keyword = request.form['keyword']
-            if len(request.form['location']) > 0: 
+            if len(request.form['location']) > 0:
                 location = request.form['location']
-            else: 
+            else:
                 errors.append('Location cannot be blank')
             if len(request.form['zipcode']) == 5:
                 try:
