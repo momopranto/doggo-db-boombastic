@@ -147,6 +147,14 @@ def events():
     events = AnEvent.query.all()
     if request.args.get('search'):
         events = AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+    elif request.args.get('search_zip'):
+        try:
+            if len(request.args.get('search_zip')) == 5:
+                events = AnEvent.query.filter_by(zipcode=int(request.args.get('search_zip')))
+            else:
+                return render_template('events.html', error='Not Valid Zipcode', username=session['username'])
+        except:
+            return render_template('events.html', error='Not Valid Zipcode', username=session['username'])
     else:
         events = AnEvent.query.join(Organize, AnEvent.event_id == Organize.event_id).join(About, Organize.group_id == About.group_id).all()
     return render_template('events.html', events=events, username=session['username'])
@@ -160,6 +168,14 @@ def groups():
         return redirect(url_for('web.login'))
     if request.args.get('search'):
         groups = AGroup.query.join(About, AGroup.group_id == About.group_id).filter_by(keyword=request.args.get('search'))
+    elif request.args.get('search_zip'):
+        try:
+            if len(request.args.get('search_zip')) == 5:
+                groups = AGroup.query.filter_by(zipcode=int(request.args.get('search_zip')))
+            else:
+                return render_template('groups.html', error='Not Valid Zipcode', username=session['username'])
+        except:
+            return render_template('groups.html', error='Not Valid Zipcode', username=session['username'])
     else:
         groups = AGroup.query.join(About, AGroup.group_id == About.group_id).all()
     return render_template('groups.html', groups=groups, username=session['username'])

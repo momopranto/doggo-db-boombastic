@@ -16,7 +16,17 @@
   {% endif %}
     <form action="#" method="GET">
       <div class="input-group stylish-input-group">
-          <input class="form-control" placeholder="Search" name="search" type="text">
+          <input class="form-control" placeholder="Search for groups by keyword" name="search" type="text">
+          <span class="input-group-addon">
+              <button type="submit" action="/group/">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
+          </span>
+      </div>
+    </form>
+    <form action="#" method="GET">
+      <div class="input-group stylish-input-group">
+          <input class="form-control" placeholder="Search for groups by zipcode" name="search_zip" type="text">
           <span class="input-group-addon">
               <button type="submit" action="/group/">
                 <span class="glyphicon glyphicon-search"></span>
@@ -30,12 +40,13 @@
         <th style="width: 80px">Group ID</th>
         <th style="width: 80px">Name</th>
         <th style="width: 140px">Description</th>
+        <th style="width: 80px">Zipcode</th>
         <th style="width: 70px">Join</th>
       </tr>
     </thead>
     <tbody>
       {%for group in groups%}
-      <tr><td>{{group.group_id}}</td><td>{{group.group_name}}</td><td>{{group.description}}</td><td>
+      <tr><td>{{group.group_id}}</td><td>{{group.group_name}}</td><td>{{group.description}}</td><td>{{group.zipcode}}</td><td>
         {% if username is defined %}
             {% if joined_group(username, group.group_id) %}
             <span>Joined</span>

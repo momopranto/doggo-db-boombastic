@@ -17,13 +17,24 @@
   {% endif %}
     <form action="#" method="GET">
       <div class="input-group stylish-input-group">
-          <input class="form-control" placeholder="Search" name="search" type="text">
+          <input class="form-control" placeholder="Search for events by keyword" name="search" type="text">
           <span class="input-group-addon">
-              <button type="submit" action="/events">
+              <button type="submit" action="/group/">
                 <span class="glyphicon glyphicon-search"></span>
               </button>
           </span>
       </div>
+    </form>
+    <form action="#" method="GET">
+      <div class="input-group stylish-input-group">
+          <input class="form-control" placeholder="Search for events by zipcode" name="search_zip" type="text">
+          <span class="input-group-addon">
+              <button type="submit" action="/group/">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
+          </span>
+      </div>
+    </form>
   <table class="table">
     <thead>
       <tr>
