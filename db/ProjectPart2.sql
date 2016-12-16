@@ -44,6 +44,22 @@ CREATE TABLE `friend` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `location`
+--
+
+CREATE TABLE `location` (
+  `location_name` varchar(20) NOT NULL DEFAULT '',
+  `zipcode` int(5) NOT NULL,
+  `address` varchar(50) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
+  `latitude` decimal(50,0) NOT NULL,
+  `longitude` decimal(50,0) NOT NULL,
+     PRIMARY KEY (`location_name`,`zipcode`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `a_group`
 --
 
@@ -119,21 +135,6 @@ CREATE TABLE `belongs_to` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `location`
---
-
-CREATE TABLE `location` (
-  `location_name` varchar(20) NOT NULL DEFAULT '',
-  `zipcode` int(5) NOT NULL,
-  `address` varchar(50) NOT NULL DEFAULT '',
-  `description` text NOT NULL,
-  `latitude` decimal(50,0) NOT NULL,
-  `longitude` decimal(50,0) NOT NULL,
-     PRIMARY KEY (`location_name`,`zipcode`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
 --
 -- Table structure for table `an_event`
 --

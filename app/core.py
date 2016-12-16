@@ -10,9 +10,9 @@ web = Blueprint('web', __name__)
 
 @web.route('/')
 def index():
-	current_time = datetime.utcnow()
+	current_time = datetime.now()
 	within_time = current_time + timedelta(3) # current time + 3 days
-        events = AnEvent.query.filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time))
+        events = AnEvent.query.filter(and_(AnEvent.start_time >= current_time, AnEvent.end_time <= within_time))
         db.session.close()
         return render_template('index.html', events=events)
 
@@ -22,7 +22,7 @@ def home():
         if session['auth']:
             current_time = datetime.utcnow()
             within_time = current_time + timedelta(3) # current time + 3 days
-            events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time == current_time, AnEvent.end_time == within_time, SignUp.username == session['username']))
+            events = AnEvent.query.join(SignUp, SignUp.event_id ==  AnEvent.event_id).filter(and_(AnEvent.start_time >= current_time, AnEvent.end_time <= within_time, SignUp.username == session['username']))
             db.session.close()
             return render_template('home.html', events=events)
     except:
@@ -146,7 +146,7 @@ def change_zipcode():
         return redirect(url_for('web.login'))
     if request.method == 'POST' and len(request.form) == 3:
         try:
-            if len(request.form['new_zipcode']) == 5 and len(request.form['confirm_zipcode']) == 5 and len(request.form['old_zipcode']) == 5: 
+            if len(request.form['new_zipcode']) == 5 and len(request.form['confirm_zipcode']) == 5 and len(request.form['old_zipcode']) == 5:
                 if request.form['new_zipcode'] == request.form['confirm_zipcode']:
                     member = Member.query.filter_by(username=session['username']).first()
                     if member and int(request.form['old_zipcode']) == member.zipcode:
@@ -157,9 +157,9 @@ def change_zipcode():
             else:
                 return render_template("change_zipcode.html", error="Not a valid Zipcode")
         except:
-            return render_template("change_zipcode.html", error="Not a valid Zipcode")     
+            return render_template("change_zipcode.html", error="Not a valid Zipcode")
     return render_template("change_zipcode.html")
-            
+
 @web.route('/events')
 def events():
     try:
@@ -273,66 +273,66 @@ def create_event():
 
 @web.route('/create_group', methods = ['GET','POST'])
 def create_group():
-    #try:
-    if session['auth']:
-        if request.method == "POST" and len(request.form) == 8:
-            errors = []
-            if len(request.form['name']) == 0:
-                errors.append('Group Name too short')
-            else:
-                name = request.form['name']
-            if len(request.form['description']) == 0:
-                errors.append('Please Provide a description')
-            else:
-                description = request.form['description']
-            if len(request.form['category']) == 0:
-                errors.append('Please Write a Category')
-            else:
-                category = request.form['category']
-            if len(request.form['keyword']) == 0 or ' ' in request.form['keyword']:
-                errors.append("Please provide a keyword, No spaces")
-            else:
-                keyword = request.form['keyword']
-            if len(request.form['location']) > 0:
-                location = request.form['location']
-            else:
-                errors.append('Location cannot be blank')
-            if len(request.form['zipcode']) == 5:
-                try:
-                    zipcode = int(request.form['zipcode'])
-                except:
+    try:
+        if session['auth']:
+            if request.method == "POST" and len(request.form) == 8:
+                errors = []
+                if len(request.form['name']) == 0:
+                    errors.append('Group Name too short')
+                else:
+                    name = request.form['name']
+                if len(request.form['description']) == 0:
+                    errors.append('Please Provide a description')
+                else:
+                    description = request.form['description']
+                if len(request.form['category']) == 0:
+                    errors.append('Please Write a Category')
+                else:
+                    category = request.form['category']
+                if len(request.form['keyword']) == 0 or ' ' in request.form['keyword']:
+                    errors.append("Please provide a keyword, No spaces")
+                else:
+                    keyword = request.form['keyword']
+                if len(request.form['location']) > 0:
+                    location = request.form['location']
+                else:
+                    errors.append('Location cannot be blank')
+                if len(request.form['zipcode']) == 5:
+                    try:
+                        zipcode = int(request.form['zipcode'])
+                    except:
+                        errors.append('Invalid zipcode')
+                else:
                     errors.append('Invalid zipcode')
+
+                try:
+                    lat = float(request.form['latitude'])
+                except:
+                    errors.append('Invalid latitude')
+
+                try:
+                    lon = float(request.form['longitude'])
+                except:
+                    errors.append('Invalid longitude')
+                if len(errors) > 0:
+                    return render_template('create_group.html', errors=errors)
+
+                group = AGroup(session['username'], name, description, category, keyword, location, zipcode,'','', lat, lon)
+                db.session.add(group)
+                db.session.commit()
+                a = About(group.group_id, category, keyword)
+                db.session.add(a)
+                db.session.commit()
+                b = BelongsTo(group.group_id, session['username'], True)
+                db.session.add(b)
+                db.session.commit()
+                db.session.close()
+                session['groups'] = populate_groups(session['username'])
+                return render_template('create_group.html', success='Group successfully created')
             else:
-                errors.append('Invalid zipcode')
-
-            try:
-                lat = float(request.form['latitude'])
-            except:
-                errors.append('Invalid latitude')
-
-            try:
-                lon = float(request.form['longitude'])
-            except:
-                errors.append('Invalid longitude')
-            if len(errors) > 0:
-                return render_template('create_group.html', errors=errors)
-
-            group = AGroup(session['username'], name, description, category, keyword, location, zipcode,'','', lat, lon)
-            db.session.add(group)
-            db.session.commit()
-            a = About(group.group_id, category, keyword)
-            db.session.add(a)
-            db.session.commit()
-            b = BelongsTo(group.group_id, session['username'], True)
-            db.session.add(b)
-            db.session.commit()
-            db.session.close()
-            session['groups'] = populate_groups(session['username'])
-            return render_template('create_group.html', success='Group successfully created')
-        else:
-            return render_template('create_group.html')
-    # except:
-    #     return redirect(url_for('web.login'))
+                return render_template('create_group.html')
+    except:
+         return redirect(url_for('web.login'))
 
 @web.route('/signup/<event_id>')
 def signup(event_id):
